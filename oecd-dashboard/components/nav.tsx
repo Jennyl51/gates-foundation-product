@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const NAV_ITEMS: { href: string; label: string }[] = [
   { href: "/", label: "Decision brief" },
@@ -9,6 +12,7 @@ const NAV_ITEMS: { href: string; label: string }[] = [
 ];
 
 export default function Nav() {
+  const pathname = usePathname();
   return (
     <header className="sticky top-0 z-30 bg-paper/85 backdrop-blur border-b border-[var(--border)]">
       <div className="mx-auto max-w-[1240px] px-6 lg:px-10 flex items-center justify-between h-14">
@@ -19,15 +23,29 @@ export default function Nav() {
           </span>
         </Link>
         <nav className="hidden sm:flex items-center gap-7 text-[14px] text-[var(--muted)]">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="hover:text-[var(--ink)] transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
+        {NAV_ITEMS.map((item) => {
+  const isActive =
+    item.href === "/"
+      ? pathname === "/"
+      : pathname.startsWith(item.href);
+
+  return (
+    <Link
+      key={item.href}
+      href={item.href}
+      aria-current={isActive ? "page" : undefined}
+      className={[
+        "px-3 py-1.5 rounded-full transition-all duration-200",
+        "hover:bg-[var(--primary-soft)] hover:text-[var(--primary)]",
+        isActive
+          ? "bg-[var(--primary-soft)] text-[var(--primary-deep)] font-medium"
+          : "text-[var(--muted)]"
+      ].join(" ")}
+    >
+      {item.label}
+    </Link>
+  );
+})}
         </nav>
         <div className="hidden sm:block text-[12px] text-[var(--subtle)] font-mono">
           2020 - 2023. USD constant
