@@ -4,8 +4,9 @@ import { Section } from "@/components/section";
 import { Scaffold, KPI } from "@/components/scaffold";
 import { Card, Pill } from "@/components/card";
 import { BarList } from "@/components/bar-list";
-import { TimeSeriesChart } from "@/components/timeseries-chart";
+import { PlotlyTimeSeries } from "@/components/plotly-timeseries";
 import { TrustLegend } from "@/components/trust-badge";
+import { Term } from "@/components/glossary";
 import { loadCountryProfile, listCountrySlugs } from "@/lib/data";
 import { formatNumber, formatUSD } from "@/lib/format";
 
@@ -96,7 +97,14 @@ export default async function CountryPage({
       </section>
 
       {/* Peer comparison scaffold */}
-      <Section eyebrow="Diagnosis. Peer comparison" title={`${p.country} vs OECD-DAC average`}>
+      <Section
+        eyebrow="Diagnosis. Peer comparison"
+        title={
+          <>
+            {p.country} vs <Term k="OECD">OECD</Term>-<Term k="DAC">DAC</Term> average
+          </>
+        }
+      >
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
           <Card
             title="Sector mix versus DAC average"
@@ -193,14 +201,14 @@ export default async function CountryPage({
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5">
           <Card title="Disbursement by year">
             {p.by_year.length > 0 ? (
-              <TimeSeriesChart
+              <PlotlyTimeSeries
                 series={[
                   {
                     name: `${p.country} disbursement`,
-                    data: p.by_year.map((d) => ({ x: d.year, y: d.disbursement })),
+                    data: p.by_year.map((d) => ({ year: d.year, value: d.disbursement })),
                   },
                 ]}
-                height={240}
+                height={260}
                 yLabel="Disbursement (USD millions)"
               />
             ) : (

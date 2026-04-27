@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Section } from "@/components/section";
 import { Card, Pill } from "@/components/card";
 import { BarList } from "@/components/bar-list";
-import { TimeSeriesChart } from "@/components/timeseries-chart";
+import { PlotlyTimeSeries } from "@/components/plotly-timeseries";
 import { StatCard } from "@/components/stat-card";
 import { loadDonorProfile, listDonorSlugs, loadSummary } from "@/lib/data";
 import { formatNumber, formatUSD, pct } from "@/lib/format";
@@ -111,14 +111,14 @@ export default async function DonorProfilePage({
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5">
           <Card title="Disbursement by year">
             {profile.by_year.length > 0 ? (
-              <TimeSeriesChart
+              <PlotlyTimeSeries
                 series={[
                   {
                     name: `${profile.name} disbursement`,
-                    data: profile.by_year.map((d) => ({ x: d.year, y: d.disbursement })),
+                    data: profile.by_year.map((d) => ({ year: d.year, value: d.disbursement })),
                   },
                 ]}
-                height={260}
+                height={280}
                 yLabel="Disbursement (USD millions)"
               />
             ) : (

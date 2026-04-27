@@ -4,7 +4,7 @@ import { Scaffold } from "@/components/scaffold";
 import { Card, Pill } from "@/components/card";
 import { TrustBadge, TrustLegend } from "@/components/trust-badge";
 import { Term } from "@/components/glossary";
-import { ColumnChart } from "@/components/column-chart";
+import { PlotlyMisalignment } from "@/components/plotly-misalignment";
 import { loadMisalignment } from "@/lib/data";
 import { formatUSD } from "@/lib/format";
 
@@ -61,23 +61,9 @@ export default async function SDGDiagnosePage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
           <Card
             title="Misalignment per goal, in percentage points"
-            description="Bars above zero are over-funded relative to need. Bars below zero are under-funded. Values shown as percentage-point gaps."
+            description="Each row is one of the 17 UN goals. Bars going right are over-funded relative to need. Bars going left are under-funded. Hover any bar for the full breakdown of phil share, need share, and dollar amount."
           >
-            <ColumnChart
-              data={m.world_level
-                .slice()
-                .sort((a, b) => a.goal - b.goal)
-                .map((r) => ({
-                  label: `${r.goal}. ${shortName(r.name)}`,
-                  value: r.delta_pp,
-                }))}
-              unit="pp"
-              height={320}
-              signed
-              yLabel="Δ percentage points (philanthropy share minus need share)"
-              positiveLabel="Over-funded vs need"
-              negativeLabel="Under-funded vs need"
-            />
+            <PlotlyMisalignment rows={m.world_level} />
             <table className="w-full mt-5 text-[14px] border-t border-[var(--border)]">
               <thead className="text-[11px] uppercase tracking-wider text-[var(--muted)]">
                 <tr>
@@ -309,7 +295,3 @@ function RatioBar({ label, pct, color }: { label: string; pct: number; color: st
   );
 }
 
-function shortName(name: string): string {
-  // truncate long goal names so labels fit
-  return name.length > 20 ? name.slice(0, 18) + "…" : name;
-}

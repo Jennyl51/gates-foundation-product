@@ -1,5 +1,6 @@
 import { Section } from "@/components/section";
 import { Card, Pill } from "@/components/card";
+import { Term } from "@/components/glossary";
 import { loadLegend, loadSummary } from "@/lib/data";
 import { formatNumber, formatUSD } from "@/lib/format";
 
@@ -64,7 +65,15 @@ export default async function MethodologyPage() {
       <Section
         eyebrow="Methodology"
         title="How the dashboard is built and what to trust."
-        description="A concise, auditable summary of how we transformed the OECD philanthropy database into the views you see across this site. Practitioners reviewing our work will find every claim is traceable to either a column in the source CSV or a transformation in the build script."
+        description={
+          <>
+            A concise, auditable summary of how we transformed the{" "}
+            <Term k="OECD">OECD</Term> philanthropy database into the views you
+            see across this site. Practitioners reviewing our work will find every
+            claim is traceable to either a column in the source CSV or a
+            transformation in the build script.
+          </>
+        }
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Stat label="Source rows" value={formatNumber(summary.rows)} sub="OECD philanthropy DB" />
