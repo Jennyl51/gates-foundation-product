@@ -141,6 +141,122 @@ export type ExplorerRow = {
 
 export type LegendEntry = { variable: string; description: string };
 
+// ---------------------------------------------------------------------------
+// C2 outputs — decision-intelligence aggregations
+// ---------------------------------------------------------------------------
+
+export type WorldMisalignmentRow = {
+  goal: number;
+  name: string;
+  phil_disbursement_usd_mn: number;
+  phil_share_pct: number;
+  need_share_pct: number;
+  delta_pp: number;
+  verdict: "underfunded" | "overfunded" | "aligned";
+};
+
+export type LdcTier = {
+  phil_to_ldc_usd_mn: number;
+  phil_named_total_usd_mn: number;
+  phil_to_ldc_share_pct: number;
+  ldc_population_share_pct: number;
+  delta_pp: number;
+  n_ldc_countries_in_data: number;
+  n_ldc_countries_total: number;
+  verdict: "underfunded" | "overfunded" | "aligned";
+};
+
+export type Misalignment = {
+  world_level: WorldMisalignmentRow[];
+  ldc_tier: LdcTier;
+  method_note: string;
+};
+
+export type SectorDelta = {
+  label: string;
+  country_share_pct: number;
+  dac_avg_share_pct: number;
+  delta_pp: number;
+};
+
+export type CountryProfileV3 = {
+  country: string;
+  slug: string;
+  is_dac_member: boolean;
+  total_disbursement_usd_mn: number;
+  n_grants: number;
+  n_foundations: number;
+  cross_border_share_pct: number;
+  domestic_share_pct: number;
+  flow_unspecified_share_pct: number;
+  by_year: { year: number; disbursement: number }[];
+  top_sectors: { sector: string; share_pct: number; disbursement: number }[];
+  top_recipients: { country: string; disbursement: number }[];
+  peer_comparison: {
+    peer_group: string;
+    n_peers: number;
+    sector_deltas: SectorDelta[];
+    region_deltas: SectorDelta[];
+    channel_deltas: SectorDelta[];
+  };
+  _caveat: string;
+};
+
+export type PeerSummary = {
+  country: string;
+  slug: string;
+  is_dac: boolean;
+  total_disbursement_usd_mn: number;
+  stable_peer_comparison: boolean;
+  stability_note: string | null;
+  biggest_overallocation_vs_dac: SectorDelta | null;
+  biggest_underallocation_vs_dac: SectorDelta | null;
+};
+
+export type ConcentrationRow = {
+  sector: string;
+  country: string;
+  disbursement_usd_mn: number;
+  n_donors: number;
+  top_donor: string;
+  top_donor_share_pct: number;
+  hhi: number;
+  concentration_band: "high" | "moderate" | "low";
+};
+
+export type SimpsonsFlag = {
+  sector: string;
+  region: string;
+  n_grants: number;
+  overall_change_usd_mn: number;
+  cross_border_change_usd_mn: number;
+  domestic_change_usd_mn: number;
+  verdict: string;
+};
+
+export const loadMisalignment = () => readJson<Misalignment>("misalignment.json");
+export const loadPeerSummaries = () => readJson<PeerSummary[]>("peer-comparators.json");
+export const loadConcentration = () => readJson<ConcentrationRow[]>("concentration.json");
+export const loadSimpsonsFlags = () => readJson<SimpsonsFlag[]>("simpsons-flags.json");
+
+export async function loadCountryProfile(slug: string): Promise<CountryProfileV3 | null> {
+  try {
+    return await readJson<CountryProfileV3>(`countries/${slug}.json`);
+  } catch {
+    return null;
+  }
+}
+
+export async function listCountrySlugs(): Promise<string[]> {
+  const dir = path.join(DATA_DIR, "countries");
+  try {
+    const files = await fs.readdir(dir);
+    return files.filter((f) => f.endsWith(".json")).map((f) => f.replace(/\.json$/, ""));
+  } catch {
+    return [];
+  }
+}
+
 export const loadSummary = () => readJson<Summary>("summary.json");
 export const loadTopDonors = () => readJson<DonorRow[]>("top-donors.json");
 export const loadDonorCountries = () => readJson<DonorCountryRow[]>("top-donor-countries.json");

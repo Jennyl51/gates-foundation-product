@@ -21,9 +21,9 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "OECD Philanthropy Atlas — Where the world's foundations give",
+  title: "OECD Decision Atlas — Where philanthropy is mis-aligned with public goals",
   description:
-    "An interactive explorer of $68B in global philanthropic funding from 506 foundations across 163 countries (OECD, 2020–2023).",
+    "Decision-intelligence dashboard built on the OECD philanthropy database. Produces draft scaffolds (claim · evidence · caveat) ready for policy briefs, with a trust badge on every figure. 2020–2023, $68B, 506 foundations.",
 };
 
 export default function RootLayout({

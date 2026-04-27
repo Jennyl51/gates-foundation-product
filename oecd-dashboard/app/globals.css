@@ -24,13 +24,13 @@
  */
 
 :root {
-  --paper: #f8f5ee;
+  --paper: #faf7f0;
   --surface: #ffffff;
-  --border: #e8e1d1;
-  --border-strong: #d4cab2;
-  --ink: #1a1a1a;
-  --muted: #6b6b6b;
-  --subtle: #9a9a9a;
+  --border: #ddd5c2;
+  --border-strong: #b8ad94;
+  --ink: #14110d;
+  --muted: #555148;
+  --subtle: #75705f;
 
   --primary: #0f4c5c;
   --primary-soft: #dde9ec;
@@ -98,6 +98,8 @@ body {
 body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
   font-feature-settings: "ss01", "ss02";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

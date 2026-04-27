@@ -3,41 +3,55 @@ import { Card, Pill } from "@/components/card";
 import { loadLegend, loadSummary } from "@/lib/data";
 import { formatNumber, formatUSD } from "@/lib/format";
 
-export const metadata = { title: "Methodology — OECD Philanthropy Atlas" };
+export const metadata = { title: "Methodology. OECD Philanthropy Atlas" };
 
 export default async function MethodologyPage() {
   const [legend, summary] = await Promise.all([loadLegend(), loadSummary()]);
 
   const notes: { title: string; body: string; tone?: "primary" | "accent" }[] = [
     {
+      title: "Trust tier on every figure (A / B / C)",
+      body: "Each number on the dashboard carries a small badge. Tier A (✓) means the figure matches an OECD published canonical figure within ±2%. Tier B (◔) means we have not matched it to a single published canonical, but it is recomputed correctly from the source spreadsheet using a documented aggregation rule. Tier C (⚠) means the underlying sample is small (typically <50 grants) and the number should be read as directional. Most of the dashboard ships at Tier B today; a future revision will lift figures to Tier A as canonical matches are confirmed.",
+      tone: "primary",
+    },
+    {
+      title: "Two complementary mis-alignment lenses",
+      body: "The goal-alignment page reports philanthropic dollars per UN goal versus where the world is furthest from each goal (world-level), and dollars to the United Nations Least Developed Countries versus the population those countries hold (country-tier). The two lenses can disagree, and that is a feature: the world-level lens emphasises issue-area imbalance; the country-tier lens emphasises distributional fairness. The country-by-goal version (a third lens) was not buildable in this environment because the Sustainable Development Report's country-level CSV was not reachable.",
+    },
+    {
+      title: "Simpson's-paradox flag on aggregated trends",
+      body: "Wherever the dashboard shows a trend over time on an aggregated slice, the same trend is also computed split by cross-border philanthropy versus domestic philanthropy. If the aggregated trend reverses direction once split, a flag fires. Three such reversals exist in the 2020 to 2023 window. the most striking is education funding in Asia, which rose in aggregate only because of domestic-philanthropy growth; cross-border education funding in Asia actually fell.",
+      tone: "primary",
+    },
+    {
       title: "All amounts are USD millions, deflated to 2023 constant prices",
       body: "Both disbursements (usd_disbursements_defl) and commitments (usd_commitment_defl) are reported by the OECD in 2023 constant US dollars. This removes inflation from year-over-year comparisons, but means our totals will not match nominal-dollar reports for the same period.",
     },
     {
-      title: "Disbursement vs commitment — and why they don't agree",
+      title: "Disbursement vs commitment. and why they don't agree",
       body: `The dataset reports a total of ${formatUSD(summary.total_disbursement_usd_mn)} disbursed and ${formatUSD(summary.total_commitment_usd_mn)} committed across the same period. The gap is real: not every foundation reports both, commitments are recorded at signing and disbursements at payment, and a multi-year commitment may pay out across years not all visible here. We use disbursements as the headline metric because they reflect money that actually moved.`,
       tone: "primary",
     },
     {
-      title: "The '2020–2023' aggregate quirk",
-      body: `${summary.aggregate_rows} rows in the dataset use the special year value '2020–2023' instead of a single year. These belong to foundations that signed an NDA to share their data only in aggregate form. They are excluded from any year-by-year time series but included in totals, donor profiles, and sector breakdowns.`,
+      title: "The '2020 to 2023' aggregate quirk",
+      body: `${summary.aggregate_rows} rows in the dataset use the special year value '2020 to 2023' instead of a single year. These belong to foundations that signed an NDA to share their data only in aggregate form. They are excluded from any year-by-year time series but included in totals, donor profiles, and sector breakdowns.`,
       tone: "accent",
     },
     {
       title: "Recipient country aggregates ('Bilateral, unspecified', regional codes)",
-      body: "Many grants are reported at a regional or supranational level rather than to a single country — for example, 'South of Sahara, regional' or 'Bilateral, unspecified'. We surface these honestly rather than discarding them. The Overview's recipient ranking excludes them so country-level patterns are visible, but they are kept in the explorer and donor profiles.",
+      body: "Many grants are reported at a regional or supranational level rather than to a single country. for example, 'South of Sahara, regional' or 'Bilateral, unspecified'. We surface these honestly rather than discarding them. The Overview's recipient ranking excludes them so country-level patterns are visible, but they are kept in the explorer and donor profiles.",
     },
     {
       title: "Cross-border vs domestic philanthropy",
-      body: `${summary.share_cross_border}% of grants are cross-border. The remainder is domestic philanthropy — a foundation giving inside its own country. Mexico, India, China and Spain have substantial domestic flows that would disappear from a 'foreign aid' view of the data.`,
+      body: `${summary.share_cross_border}% of grants are cross-border. The remainder is domestic philanthropy. a foundation giving inside its own country. Mexico, India, China and Spain have substantial domestic flows that would disappear from a 'foreign aid' view of the data.`,
     },
     {
       title: "Policy markers are 0/1/2 scores, not dollar splits",
-      body: "Gender, climate (mitigation and adaptation), environment, biodiversity, desertification and nutrition each carry a marker on a 0–2 scale. We aggregate dollars for grants where the marker is the principal objective (score 2) so totals do not double-count, but a single grant can carry markers in multiple dimensions.",
+      body: "Gender, climate (mitigation and adaptation), environment, biodiversity, desertification and nutrition each carry a marker on a 0-2 scale. We aggregate dollars for grants where the marker is the principal objective (score 2) so totals do not double-count, but a single grant can carry markers in multiple dimensions.",
     },
     {
       title: "SDG targets are multi-tag",
-      body: "The sdg_focus column contains semicolon-separated SDG targets (e.g. '15.1; 15.5'). We extract the parent goal (1–17) for each target and sum dollars per goal. Because a single grant can support multiple goals, the sum across goals will exceed the dataset total — this is intentional and matches how the OECD reports SDG alignment.",
+      body: "The sdg_focus column contains semicolon-separated SDG targets (e.g. '15.1; 15.5'). We extract the parent goal (1-17) for each target and sum dollars per goal. Because a single grant can support multiple goals, the sum across goals will exceed the dataset total. this is intentional and matches how the OECD reports SDG alignment.",
     },
     {
       title: "Top-50-donor profiles",
@@ -64,7 +78,7 @@ export default async function MethodologyPage() {
             value="Disbursement"
             sub="USD mn, 2023 constant"
           />
-          <Stat label="Date range" value={`${summary.year_min} – ${summary.year_max}`} />
+          <Stat label="Date range" value={`${summary.year_min} - ${summary.year_max}`} />
         </div>
       </Section>
 
@@ -132,7 +146,7 @@ export default async function MethodologyPage() {
               <span className="font-mono text-[12px]">public/data/</span>.
             </li>
             <li>
-              The dashboard never touches the raw CSV at runtime — pages render from the
+              The dashboard never touches the raw CSV at runtime. pages render from the
               precomputed JSONs, so loads stay fast and the dataset can be updated by
               dropping in a new CSV and re-running the script.
             </li>
@@ -141,7 +155,7 @@ export default async function MethodologyPage() {
               <span className="font-mono text-[12px]">lib/format.ts</span> for consistency.
             </li>
             <li>
-              Charts are hand-rolled SVG — no charting library — so every visual choice
+              Charts are hand-rolled SVG. no charting library. so every visual choice
               is auditable inline rather than buried inside a third-party config.
             </li>
           </ol>

@@ -1,12 +1,14 @@
-# OECD Philanthropy Atlas — Handoff Notes
+# OECD Decision Atlas — Handoff (v3)
 
-Hi Ayah & Jenny — here's what I've added to the repo, why it's structured this way, and what's left to do. The goal is for you to be able to pick up any piece independently.
+Hi Ayah and Jenny — this document explains the v3 dashboard sitting in this repo, what changed from the original create-next-app scaffold, and what's left for either of you to pick up.
 
 ---
 
-## What this is
+## What this is now
 
-A Next.js 16 / React 19 dashboard that explores the OECD philanthropy dataset. It's set up as a **read-only static site** powered by precomputed JSON files — no database, no API, no server runtime. That means it deploys to Vercel as a static export and stays free.
+A Next.js 16 / React 19 dashboard built on the OECD philanthropy spreadsheet (116k grants, $68B disbursed, 2020–2023). The brief said "build something user-friendly for policymakers and foundation leaders." We narrowed the primary user to the **OECD policy analyst** (Samir, the third of the three judges) because his job — writing briefs from the spreadsheet — is exactly what this tool is set up to make ten times faster. Foundation strategists are a compatible secondary reader: every screen carries a one-line "What this means for a foundation strategist" callout so the Gates judge never feels excluded.
+
+The defining product idea: **the dashboard does not just expose the data, it produces the analyst's deliverable**. Every diagnosis page renders a ready-to-paste scaffold (claim → evidence → caveat) with a trust badge on every figure. Whatever bare numbers used to live on the page now live inside scaffolds.
 
 ---
 
@@ -15,190 +17,122 @@ A Next.js 16 / React 19 dashboard that explores the OECD philanthropy dataset. I
 ```bash
 cd oecd-dashboard
 npm install
+python3 scripts/preprocess.py   # only if data changes
 npm run dev
-# open http://localhost:3000
+# → http://localhost:3000
 ```
 
-If you change the source CSV or add new aggregations:
-
-```bash
-python3 scripts/preprocess.py
-# regenerates everything in public/data/
-```
-
-The raw 60MB CSV lives at `data/raw/oecd-funding.csv`. It is **gitignored** — anyone cloning the repo needs to drop the file into that folder before running preprocess.
+The preprocess script needs the raw 60MB CSV at `data/raw/oecd-funding.csv`. That file is gitignored. If the repo doesn't have it, drop it in from the original case-comp upload and rerun.
 
 ---
 
-## File structure
+## What's in the repo
 
 ```
 oecd-dashboard/
 ├── app/
-│   ├── page.tsx                  # Overview (signature page)
-│   ├── layout.tsx                # Root layout — fonts, nav, footer
-│   ├── globals.css               # Design tokens (colors, fonts)
-│   ├── explore/
-│   │   ├── page.tsx              # Server entry
-│   │   └── explorer-client.tsx   # Client-side filters + charts
-│   ├── donors/
-│   │   ├── page.tsx              # Top-50 index table
-│   │   └── [slug]/page.tsx       # Per-foundation profile
-│   ├── insights/page.tsx         # Markers + SDG view
-│   └── methodology/page.tsx      # Caveats + variable glossary
+│   ├── page.tsx                       # Decision Brief homepage (3 ranked diagnoses + LDC scaffold)
+│   ├── layout.tsx                     # Root layout — fonts, nav, footer
+│   ├── globals.css                    # Design tokens (palette + type)
+│   ├── diagnose/sdg/page.tsx          # Goal-alignment diagnosis (signature page)
+│   ├── country/page.tsx               # Country profile index
+│   ├── country/[slug]/page.tsx        # Per-country profile w/ DAC peer comparison
+│   ├── explore/                       # Filterable explorer with auto-generated brief snippet
+│   ├── donors/                        # v1 donor-portrait pages (kept for now, demoted in nav)
+│   ├── insights/                      # v1 markers + SDG mash-up (kept; lower priority)
+│   └── methodology/                   # Trust-tier explanation, caveats, glossary
 ├── components/
-│   ├── nav.tsx, footer.tsx       # Site chrome
-│   ├── section.tsx               # Editorial section wrapper
-│   ├── card.tsx                  # Card / Pill primitives
-│   ├── stat-card.tsx             # Hero stat tile
-│   ├── bar-list.tsx              # Ranked horizontal bars (workhorse)
-│   ├── timeseries-chart.tsx      # Hand-rolled SVG line chart
-│   └── column-chart.tsx          # Hand-rolled SVG column chart
+│   ├── trust-badge.tsx                # ✓/◔/⚠ tier badge — used wherever a number renders
+│   ├── scaffold.tsx                   # Claim/evidence/caveat block + KPI tile
+│   ├── nav.tsx, footer.tsx, section.tsx, card.tsx, stat-card.tsx
+│   ├── bar-list.tsx, timeseries-chart.tsx, column-chart.tsx
 ├── lib/
-│   ├── data.ts                   # Server-side JSON loaders, types
-│   └── format.ts                 # USD / number formatters
+│   ├── data.ts                        # Server-side JSON loaders + types
+│   └── format.ts                      # USD / number formatters
 ├── scripts/
-│   └── preprocess.py             # Builds public/data/ from raw CSV
+│   └── preprocess.py                  # CSV + 5 outside refs → ~20 small JSON files
 ├── data/
-│   └── raw/                      # gitignored CSV lives here
-└── public/
-    └── data/                     # Compact JSONs the app reads
+│   ├── raw/                           # gitignored — drop the OECD CSV here
+│   └── external/                      # 5 small reference tables w/ README
+└── public/data/                       # ~20 pre-aggregated JSONs the dashboard reads
+└── working/                           # the planning docs that drove v3
+    ├── 00-gate-revisions.md           # latest scope adjustments
+    ├── 01-idea-validation.md          # competitive teardown + go/no-go
+    ├── 02-personas.md                 # Samir + scenarios
+    ├── 03-decision-questions.md       # 12 P0/P1 questions, 5 rejects
+    ├── 04-metric-spec.md              # 13 metrics with formulas + guardrails
+    ├── 05-scope-contract.md           # build sequence
+    └── 06-demo-acceptance.md          # judge questions + 5-min talk track
 ```
 
+The `working/` folder is the most important thing to read after this handoff. It contains the entire decision-trail from the original brief to v3 — what was rejected, what was kept, what was deliberately simplified.
+
 ---
 
-## Design system
+## v3 page status
 
-| Token | Value | Usage |
+| Page | Status | What it does |
 |---|---|---|
-| `--primary` | `#0F4C5C` | Deep teal — primary brand, CTAs |
-| `--accent` | `#C77B3D` | Warm ochre — eyebrows, accent bars |
-| `--forest` | `#4A7C59` | Sector / positive bars |
-| `--alert` | `#B7472A` | Warnings, removal chips |
-| `--paper` | `#F8F5EE` | Page background (warm off-white) |
-| `--surface` | `#FFFFFF` | Cards |
-| `--border` | `#E8E1D1` | Warm divider |
-| `--ink` | `#1A1A1A` | Body text |
+| `/` Decision brief | ✅ Done | Homepage with 3 ranked diagnoses + counter-intuitive LDC scaffold |
+| `/diagnose/sdg` | ✅ Done | Two-lens goal-alignment diagnosis (world + LDC tier) — signature page |
+| `/country` | ✅ Done | Country profile index split into stable / directional groups |
+| `/country/[slug]` | ✅ Done | 26 OECD donor-country profiles, each with DAC peer-comparator scaffold |
+| `/explore` | ✅ Done (v3 upgrade) | Filter UI now produces an auto-generated brief snippet at top with copy button |
+| `/methodology` | ✅ Done | Trust-tier explanation, two-lens method note, Simpson's-flag note, glossary |
+| `/donors` and `/donors/[slug]` | ⚠ v1 leftover | Atlas-style donor portraits — kept temporarily; demote or delete |
+| `/insights` | ⚠ v1 leftover | Markers + SDG view — superseded by `/diagnose/sdg`; keep or delete |
 
-Type pairing:
-- **Display / serif** (`--font-source-serif`) — Source Serif 4 for editorial titles and big stat numbers
-- **Body / sans** (`--font-geist-sans`) — Geist for UI
-- **Mono** (`--font-geist-mono`) — Geist Mono for numbers, labels, eyebrows
-
-Don't introduce a new color or a new font without a reason — it'll fight the editorial feel.
+The two v1 pages still in the codebase do not appear in the main nav. They work but they don't fit the v3 framing. Either of you can delete them when you're confident nothing links there from a bookmark.
 
 ---
 
-## Data pipeline (preprocess.py)
+## The three things to know about the data
 
-The CSV → 14 JSON files. Reading the script top-to-bottom is the fastest way to understand the data model. Highlights:
+1. **Trust tier on every figure.** ✓ Tier A means the number matches OECD canon within ±2%. ◔ Tier B (the default state today) means we did the math correctly from the source spreadsheet but have not yet matched against an official canonical figure. ⚠ Tier C means the slice has fewer than 50 grants; treat directionally. The badge UI is `<TrustBadge tier="A|B|C" />`.
 
-| File | What it is |
+2. **Two mis-alignment lenses, intentionally.** The world-level lens compares philanthropy share per UN goal against the world's distance-to-target on that goal. The country-tier (Least Developed Countries) lens compares dollars to LDCs against the population share LDCs hold inside the named-recipient set. They can disagree, and that's a feature.
+
+3. **Simpson's-paradox flags exist for a reason.** Aggregating across cross-border + domestic philanthropy can hide real reversals. The most important live example: education funding in Asia rose overall, but cross-border fell while domestic surged. The dashboard surfaces three such reversals; do not ignore them.
+
+---
+
+## What's been deliberately skipped (you can pick any of these up)
+
+- **Per-country reconciliation to OECD canonical totals.** The trust badge is Tier B everywhere — bumping figures to Tier A requires matching to OECD's own published tables. Most-impactful single project for credibility.
+- **A `/diagnose/concentration` page.** The data is in `public/data/concentration.json` (top 300 single-funder slices). A page would render it as a sortable table with HHI bands.
+- **A `/diagnose/simpsons` page.** Same idea — `simpsons-flags.json` is ready, just needs a page that lists the flagged slices and shows the cross-border-vs-domestic decomposition for each.
+- **A demo deck for the judges.** The 5-minute talk track is fully written in `working/06-demo-acceptance.md`. Use the screenshots from the running dashboard.
+- **External SDG country-level scores.** The build environment couldn't reach the SDR2024 download. Run `curl https://dashboards.sdgindex.org/downloads` from a normal laptop; replace `data/external/sdg-need-scores.json` with the country-level version; the misalignment page can then add a country-level lens.
+
+---
+
+## Design system, in two minutes
+
+| Token | Use |
 |---|---|
-| `summary.json` | Headline numbers used in the hero |
-| `top-donors.json` | Top 50 foundations by disbursement |
-| `top-recipient-countries.json` | All recipient countries, ranked |
-| `top-donor-countries.json` | All donor home countries, ranked |
-| `sectors.json` / `subsectors.json` | OECD CRS sector totals |
-| `timeseries-year.json` | Year x sector x region pivots for trend charts |
-| `markers.json` | Gender / climate / env / nutrition 0/1/2 score rollups |
-| `sdg.json` | UN SDG goal totals, multi-tag aware |
-| `flow-types.json` | Cross-border vs domestic |
-| `channels.json` | OECD channel of delivery |
-| `donor-x-country.json` | Top 30 donors x top 30 recipients matrix |
-| `judge-questions.json` | Pre-baked answers to the kickoff deck's sample questions |
-| `donors/{slug}.json` | Per-foundation profile (×50) |
-| `explorer-aggregates.json` | (year, donor_country, region, sector) → ($ + grant count) for the Explorer |
-| `legend.json` | OECD variable definitions for the methodology page |
+| `--primary` (#0F4C5C) | Brand teal — CTAs, primary bars |
+| `--accent` (#C77B3D) | Eyebrows, accent bars, decorative numbers |
+| `--forest` (#4A7C59) | Foundation-reader callouts, positive bars |
+| `--alert` (#B7472A) | Cautions, removals, negative deltas |
+| `--paper` (#F8F5EE) | Page background |
+| `--surface` (#FFFFFF) | Cards |
+
+Type pairing: Source Serif 4 for display + Geist for body + Geist Mono for codes. Don't switch.
 
 ---
 
-## Page-by-page status
+## Push and deploy
 
-| Page | Status | Notes |
-|---|---|---|
-| `/` Overview | ✅ Done | Hero, judge questions, top-donors, top-recipients, time series, sectors, donor countries, CTA |
-| `/explore` | ✅ Done | Multi-select filters on year, donor country, region, sector. Live aggregation. |
-| `/donors` | ✅ Done | Sortable-ish table of top 50 with link to each profile |
-| `/donors/[slug]` | ✅ Done | Sector mix, country mix, year trend, sample grants. Built for top 50; others 404. |
-| `/insights` | ✅ Done | 6 policy markers + 17 SDGs + delivery channels |
-| `/methodology` | ✅ Done | Caveats + full variable glossary |
+The repo is set up to deploy on Vercel as a static export — no server code, no API. Pushing to GitHub and connecting Vercel to this repo with `oecd-dashboard/` as the project root is the entire deployment path.
+
+If you've cloned this from a ZIP rather than `git clone`, **GitHub Desktop won't be able to push** because the folder isn't a git repository. The fix is to clone Jenny's repo fresh from GitHub Desktop and copy the `oecd-dashboard/` folder over.
 
 ---
 
-## What's missing / opportunities
+## Questions that need decisions from the team
 
-These would all be additive — the site works without them, but they'd be force-multipliers. Pick what excites you:
-
-1. **A geographic map view.** A choropleth on the explorer or overview showing recipient totals on a world map. We've got country-level data; would need a topojson world map and a simple D3 or hand-rolled SVG renderer. Best place: a new tab on the Overview, or a `/map` page. **High visual impact for the judges.**
-2. **Sector sub-page.** `/sectors/[slug]` — same pattern as donor profile but for a sector (e.g. "Health"). Show top donors, top recipient countries, timeline. Easy win because the data is already there.
-3. **Sankey: donor → sector or donor → country.** A two-column flow diagram on the Insights page. Moderate effort but visually striking.
-4. **A "compare two foundations" view.** Pick two donors, see their sector/geo/year fingerprints side by side. Great for the demo — judges could try "compare Gates vs Ford" live.
-5. **Search.** Type-ahead on donors and recipient countries from the nav. Doesn't need a backend — the lists are small enough to filter client-side.
-6. **Story mode / guided tour.** A "scrollytelling" intro on the Overview that walks through 5 findings, locking the user in for 60 seconds before dropping them into free exploration.
-7. **Polish: micro-animations on filter change.** Bars springing to new values rather than snapping.
-8. **Polish: numbers that climb on first paint.** A small "count-up" effect on the hero stats.
-9. **Mobile audit.** I designed for desktop first. The grids and chart aspect ratios need a pass at <640px.
-10. **Accessibility audit.** Color contrast on the bar-list track is a known weakness; add aria-labels to interactive bars; check keyboard nav on the multi-select filters.
-
----
-
-## Likely judge questions and where they're answered
-
-| Question | Where in the dashboard |
-|---|---|
-| "Top donors based out of the UK?" | Overview · Q card #1 ("Wellcome Trust"). Also Explore: filter Donor country = UK. |
-| "Top countries for maternal health?" | Overview · Q card #2. |
-| "Climate funding over time?" | Overview · Q card #4 (timeseries from climate-marker rows). |
-| "Top donor for infectious diseases in India?" | Overview · Q card #5. |
-| "What does Gates Foundation actually fund?" | `/donors/gates-foundation` — full profile with sample grants. |
-| "How is this different from raw OECD downloads?" | `/methodology` — 8 explanatory notes + glossary. |
-| "Where are the gender-equality dollars going?" | `/insights` — Gender marker card with principal-objective top sectors and donors. |
-
----
-
-## Deployment
-
-```bash
-# from the oecd-dashboard/ directory
-npm run build
-```
-
-For Vercel:
-1. Connect the GitHub repo
-2. Set the project root to `oecd-dashboard/`
-3. Build command: default (`next build`)
-4. No env vars needed
-5. Deploy
-
-The raw CSV is gitignored, but `public/data/` is committed (the JSONs are small). If preprocess.py is run before a push, the deploy stays in sync.
-
----
-
-## A few opinionated calls I made (so you can override)
-
-- **Hand-rolled SVG charts** instead of Recharts/Chart.js. Smaller bundle, more editorial look, every visual decision is in our codebase. Trade-off: no built-in tooltips. If we want hover tooltips on the bar charts, easiest route is to wrap a `<title>` SVG element inside each bar (gives basic native tooltips for free).
-- **No state library.** Filters live in `useState` inside `explorer-client.tsx`. If we add cross-page state (e.g. "filter persistence across nav"), the cleanest path is URL search params — let me know and I'll wire it up.
-- **Pre-aggregation, not raw CSV in the browser.** 116k rows × 32 columns is too heavy for client-side. The `explorer-aggregates.json` is 245KB, which is the right ceiling for snappy filtering.
-- **Source Serif 4 + Geist** is the type pairing. It's editorial, slightly journalistic, signals "data + craft." Don't switch to Inter or Arial — they'll make it feel generic.
-- **Methodology is a first-class page, not a footer link.** OECD will check this. Keeping it prominent is part of the differentiation.
-
----
-
-## Quick reference — common edits
-
-**Add a chart to the Overview.** Drop a new `<Card>` inside any `<Section>` in `app/page.tsx`. Use `BarList` for "top X" lists, `TimeSeriesChart` for trend lines, `ColumnChart` for sector-style bars. Server-load the data via `loadXxx()` from `lib/data.ts`.
-
-**Add a filter to the Explorer.** Filters are dimensions on the explorer-aggregates rows. To add (e.g.) a recipient-country filter, you'd need to extend `preprocess.py` to include a country dimension in `explorer-aggregates.json` (the rows would get bigger), then add another `<FilterGroup>` to `explorer-client.tsx`.
-
-**Add a new page.** Create `app/{name}/page.tsx`. Server component by default — use `loadXxx()` from `lib/data.ts`. Add it to `NAV_ITEMS` in `components/nav.tsx`.
-
-**Re-skin colors.** Edit the `:root` CSS variables in `app/globals.css`. Tailwind class shortcuts (`bg-paper`, `text-ink` etc.) are wired through `@theme inline` in the same file.
-
----
-
-## Questions / feedback
-
-Push back on any of this. The pieces are intentionally small and replaceable — none of it is precious.
+1. Do we keep `/donors` and `/insights`? They don't hurt — they just don't fit the framing.
+2. Who owns the demo? The talk track in `working/06-demo-acceptance.md` is 5 minutes plotted to screens. Run through it as-is or remix.
+3. If the case judges are split between policy and foundation lenses (which I think they will be), do we want a one-screen "for foundation strategists" mode — a toggle that re-frames the same data — for v4? Not for the comp, but worth noting.
 
 — Maxime

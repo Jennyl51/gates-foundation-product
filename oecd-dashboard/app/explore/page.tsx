@@ -3,7 +3,7 @@ import { loadExplorer, loadSummary } from "@/lib/data";
 import { ExplorerClient } from "./explorer-client";
 
 export const metadata = {
-  title: "Explore — OECD Philanthropy Atlas",
+  title: "Explore. OECD Philanthropy Atlas",
 };
 
 export default async function ExplorePage() {

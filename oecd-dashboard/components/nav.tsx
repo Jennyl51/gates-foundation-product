@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const NAV_ITEMS: { href: string; label: string }[] = [
-  { href: "/", label: "Overview" },
+  { href: "/", label: "Decision brief" },
+  { href: "/diagnose/sdg", label: "Goal alignment" },
+  { href: "/country", label: "Country profiles" },
   { href: "/explore", label: "Explore" },
-  { href: "/donors", label: "Donors" },
-  { href: "/insights", label: "Insights" },
   { href: "/methodology", label: "Methodology" },
 ];
 
@@ -15,7 +15,7 @@ export default function Nav() {
         <Link href="/" className="flex items-baseline gap-3">
           <Logo />
           <span className="font-serif text-[18px] leading-none text-ink">
-            OECD <span className="italic text-[var(--primary)]">Philanthropy Atlas</span>
+            OECD <span className="italic text-[var(--primary)]">Decision Atlas</span>
           </span>
         </Link>
         <nav className="hidden sm:flex items-center gap-7 text-[14px] text-[var(--muted)]">
@@ -30,7 +30,7 @@ export default function Nav() {
           ))}
         </nav>
         <div className="hidden sm:block text-[12px] text-[var(--subtle)] font-mono">
-          2020 – 2023 · USD constant
+          2020 - 2023. USD constant
         </div>
       </div>
     </header>

@@ -15,7 +15,7 @@ export default function Footer() {
         <div className="space-y-1">
           <div className="text-ink mb-1">Built for</div>
           <p>Spring 2026 Case Competition</p>
-          <p>DSS · DataGood · Open Project</p>
+          <p>DSS. DataGood. Open Project</p>
           <p>Product Track</p>
         </div>
         <div className="space-y-1">
@@ -26,13 +26,13 @@ export default function Footer() {
             </Link>
           </p>
           <p>OECD CRS sectoral coding</p>
-          <p>2020–2023 · 116k grants</p>
+          <p>2020 to 2023. 116k grants</p>
         </div>
       </div>
       <div className="border-t border-[var(--border)]">
         <div className="mx-auto max-w-[1240px] px-6 lg:px-10 py-4 text-[11px] text-[var(--subtle)] font-mono uppercase tracking-wider flex justify-between">
           <span>Data: OECD philanthropy database</span>
-          <span>Built by Ayah · Maxime · Jenny</span>
+          <span>Built by Ayah. Maxime. Jenny</span>
         </div>
       </div>
     </footer>
