@@ -74,35 +74,39 @@ export function BarList({
               )}
               <span
                 className={[
-                  "text-[14px] truncate",
-                  item.highlight ? "font-medium text-ink" : "text-ink",
+                  "text-[14px] truncate font-medium",
+                  "text-ink",
                 ].join(" ")}
                 title={item.label}
               >
                 {item.label}
               </span>
               {item.sub && (
-                <span className="text-[12px] text-[var(--subtle)] hidden sm:inline">
+                <span className="text-[12px] text-[var(--muted)] hidden sm:inline">
                   {item.sub}
                 </span>
               )}
             </div>
-            <span className="font-mono text-[13px] text-ink tabular-nums shrink-0">
+            <span className="font-mono text-[14px] text-ink tabular-nums shrink-0 font-medium">
               {valueDisplay}
             </span>
           </div>
         );
         return (
           <li key={`${item.label}-${idx}`} className="relative">
-            {/* track */}
+            {/* track. light tint of the accent so the bar reads against it */}
             <div
               className="absolute inset-x-0 top-1.5 bottom-1.5 rounded-sm"
               style={{ background: softVar }}
             />
-            {/* bar */}
+            {/* bar. softened to ~0.55 opacity so ink text remains readable on top */}
             <div
               className="absolute left-0 top-1.5 bottom-1.5 rounded-sm transition-[width]"
-              style={{ width: `${pctWidth}%`, background: colorVar, opacity: item.highlight ? 1 : 0.85 }}
+              style={{
+                width: `${pctWidth}%`,
+                background: colorVar,
+                opacity: item.highlight ? 0.7 : 0.55,
+              }}
             />
             {/* content */}
             <div className="relative px-3">

@@ -145,8 +145,8 @@ export function KPI({
       {sub && (
         <div
           className={[
-            "mt-2 text-[12px] md:text-[13px]",
-            accent ? "text-white/80" : "text-[var(--muted)]",
+            "mt-2 text-[13px] md:text-[14px] leading-snug",
+            accent ? "text-white/85" : "text-[var(--muted)]",
           ].join(" ")}
         >
           {sub}

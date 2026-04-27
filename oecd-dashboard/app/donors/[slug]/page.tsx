@@ -114,11 +114,12 @@ export default async function DonorProfilePage({
               <TimeSeriesChart
                 series={[
                   {
-                    name: profile.name,
+                    name: `${profile.name} disbursement`,
                     data: profile.by_year.map((d) => ({ x: d.year, y: d.disbursement })),
                   },
                 ]}
                 height={260}
+                yLabel="Disbursement (USD millions)"
               />
             ) : (
               <div className="text-[14px] text-[var(--muted)] py-6 italic">

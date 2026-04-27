@@ -65,6 +65,20 @@ export function TimeSeriesChart({
         role="img"
         aria-label={yLabel ? `Time series chart: ${yLabel}` : "Time series chart"}
       >
+        {/* y-axis title */}
+        {yLabel && (
+          <text
+            x={14}
+            y={PAD_T + innerH / 2}
+            fontSize={12}
+            fontFamily="var(--font-geist-mono)"
+            fill="var(--muted)"
+            textAnchor="middle"
+            transform={`rotate(-90 14 ${PAD_T + innerH / 2})`}
+          >
+            {yLabel}
+          </text>
+        )}
         {/* y-axis grid + labels */}
         {ticks.map((t) => {
           const y = yPos(t);
@@ -82,9 +96,9 @@ export function TimeSeriesChart({
                 x={PAD_L - 8}
                 y={y + 4}
                 textAnchor="end"
-                fontSize={11}
+                fontSize={12}
                 fontFamily="var(--font-geist-mono)"
-                fill="var(--subtle)"
+                fill="var(--muted)"
               >
                 {unit === "USD" ? formatUSD(t) : t.toLocaleString()}
               </text>
@@ -98,9 +112,9 @@ export function TimeSeriesChart({
             x={xPos(x)}
             y={H - PAD_B + 18}
             textAnchor="middle"
-            fontSize={11}
+            fontSize={12}
             fontFamily="var(--font-geist-mono)"
-            fill="var(--muted)"
+            fill="var(--ink)"
           >
             {x}
           </text>
@@ -167,19 +181,20 @@ export function TimeSeriesChart({
           );
         })}
       </svg>
-      {series.length > 1 && (
-        <div className="flex flex-wrap gap-x-5 gap-y-1 mt-2 text-[12px] text-[var(--muted)]">
-          {series.map((s, i) => (
-            <span key={s.name} className="flex items-center gap-1.5">
-              <span
-                className="inline-block w-3 h-[2px]"
-                style={{ background: s.color ?? colors[i % colors.length] }}
-              />
-              {s.name}
-            </span>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-[12px] text-ink">
+        {series.map((s, i) => (
+          <span key={s.name} className="flex items-center gap-2">
+            <span
+              className="inline-block w-4 h-[3px] rounded-sm"
+              style={{ background: s.color ?? colors[i % colors.length] }}
+            />
+            {s.name}
+            {unit === "USD" && (
+              <span className="text-[var(--muted)] font-mono ml-1">(USD millions, 2023 constant)</span>
+            )}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

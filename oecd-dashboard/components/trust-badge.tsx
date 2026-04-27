@@ -59,11 +59,13 @@ export function TrustBadge({
 
 export function TrustLegend() {
   return (
-    <div className="flex flex-wrap gap-3 text-[12px] text-[var(--muted)]">
+    <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-2 text-[13px] text-ink">
       {(["A", "B", "C"] as Tier[]).map((t) => (
-        <span key={t} className="inline-flex items-center gap-1.5">
+        <span key={t} className="inline-flex items-center gap-2">
           <TrustBadge tier={t} showLabel />
-          <span className="text-[11px] text-[var(--subtle)]">{COPY[t].tooltip.split(".")[0]}</span>
+          <span className="text-[13px] text-[var(--muted)] leading-snug">
+            {COPY[t].tooltip.split(".")[0]}
+          </span>
         </span>
       ))}
     </div>

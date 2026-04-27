@@ -3,6 +3,7 @@ import { Section } from "@/components/section";
 import { Card, Pill } from "@/components/card";
 import { Scaffold, KPI } from "@/components/scaffold";
 import { TrustBadge, TrustLegend } from "@/components/trust-badge";
+import { Term } from "@/components/glossary";
 import {
   loadSummary,
   loadMisalignment,
@@ -41,14 +42,16 @@ export default async function HomePage() {
             and what should we do about it?
           </h1>
           <p className="mt-7 text-[18px] md:text-[20px] text-ink leading-relaxed max-w-3xl">
-            A reading of the OECD philanthropy database, framed for the policy
-            analyst&rsquo;s brief.
+            A reading of the <Term>OECD</Term> philanthropy database, framed for
+            the policy analyst&rsquo;s brief.
           </p>
           <p className="mt-4 text-[16px] md:text-[17px] text-[var(--muted)] leading-relaxed max-w-3xl">
-            Each page holds a draft passage with three parts: a claim, the evidence,
-            and a caveat. A small mark beside every figure signals how far our number
-            sits from OECD&rsquo;s own. {formatUSD(summary.total_disbursement_usd_mn)}{" "}
-            disbursed by {formatNumber(summary.n_foundations)} foundations to{" "}
+            Each page holds a draft passage with three parts: a claim, the
+            evidence, and a caveat. A small{" "}
+            <Term k="trust badge">trust badge</Term> beside every figure signals
+            how far our number sits from <Term>OECD</Term>&rsquo;s own.{" "}
+            {formatUSD(summary.total_disbursement_usd_mn)} disbursed by{" "}
+            {formatNumber(summary.n_foundations)} foundations to{" "}
             {formatNumber(summary.n_recipient_countries)} countries.
           </p>
 
@@ -67,15 +70,15 @@ export default async function HomePage() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/diagnose/sdg"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--primary)] text-white text-[15px] hover:bg-[var(--primary-deep)] transition-colors">
-              See the goal alignment diagnosis
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--primary-deep)] text-white text-[15px] font-medium hover:bg-[var(--primary)] transition-colors shadow-sm">
+              See the goal alignment diagnosis →
             </Link>
             <Link href="/country"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--border-strong)] text-ink text-[15px] hover:bg-black/[0.03] transition-colors">
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border-2 border-[var(--primary)] text-[var(--primary-deep)] text-[15px] font-medium hover:bg-[var(--primary-soft)] transition-colors">
               Country profiles
             </Link>
             <Link href="/methodology"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--border-strong)] text-ink text-[15px] hover:bg-black/[0.03] transition-colors">
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border-2 border-[var(--border-strong)] text-ink text-[15px] font-medium hover:border-[var(--primary)] transition-colors">
               Methodology
             </Link>
           </div>

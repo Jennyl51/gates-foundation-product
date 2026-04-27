@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Card } from "@/components/card";
 import { BarList } from "@/components/bar-list";
 import { TimeSeriesChart } from "@/components/timeseries-chart";
-import { TrustBadge } from "@/components/trust-badge";
+import { TrustBadge, TrustLegend } from "@/components/trust-badge";
 import { formatUSD, formatNumber, pct } from "@/lib/format";
 import type { ExplorerRow, Summary } from "@/lib/data";
 
@@ -113,6 +113,7 @@ export function ExplorerClient({
 
   return (
     <div className="space-y-6">
+      <div className="mb-2"><TrustLegend /></div>
       {/* Filter controls */}
       <Card padded>
         <div className="flex items-center justify-between mb-4">
@@ -188,13 +189,14 @@ export function ExplorerClient({
             <TimeSeriesChart
               series={[
                 {
-                  name: "Disbursement",
+                  name: "Disbursement in current slice",
                   data: byYear
                     .filter((r) => r.label !== " " && /^\d+$/.test(r.label))
                     .sort((a, b) => Number(a.label) - Number(b.label))
                     .map((r) => ({ x: Number(r.label), y: r.v })),
                 },
               ]}
+              yLabel="Disbursement (USD millions)"
             />
           ) : (
             <Empty />

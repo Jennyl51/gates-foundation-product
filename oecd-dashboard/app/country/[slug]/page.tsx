@@ -5,6 +5,7 @@ import { Scaffold, KPI } from "@/components/scaffold";
 import { Card, Pill } from "@/components/card";
 import { BarList } from "@/components/bar-list";
 import { TimeSeriesChart } from "@/components/timeseries-chart";
+import { TrustLegend } from "@/components/trust-badge";
 import { loadCountryProfile, listCountrySlugs } from "@/lib/data";
 import { formatNumber, formatUSD } from "@/lib/format";
 
@@ -90,6 +91,7 @@ export default async function CountryPage({
               trustTier={trustTier}
             />
           </div>
+          <div className="mt-6"><TrustLegend /></div>
         </div>
       </section>
 
@@ -194,11 +196,12 @@ export default async function CountryPage({
               <TimeSeriesChart
                 series={[
                   {
-                    name: p.country,
+                    name: `${p.country} disbursement`,
                     data: p.by_year.map((d) => ({ x: d.year, y: d.disbursement })),
                   },
                 ]}
                 height={240}
+                yLabel="Disbursement (USD millions)"
               />
             ) : (
               <div className="text-[14px] text-[var(--muted)] py-6 italic">
@@ -234,27 +237,29 @@ function DeltaRow({ d }: { d: { label: string; country_share_pct: number; dac_av
   return (
     <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
       <div className="min-w-0">
-        <div className="flex justify-between items-baseline text-[13px] mb-1">
-          <span className="text-ink truncate">{d.label}</span>
-          <span className="font-mono tabular-nums text-[var(--muted)] text-[12px] shrink-0 ml-3">
-            {d.country_share_pct.toFixed(1)}% vs {d.dac_avg_share_pct.toFixed(1)}%
+        <div className="flex justify-between items-baseline text-[14px] mb-1.5">
+          <span className="text-ink font-medium truncate">{d.label}</span>
+          <span className="font-mono tabular-nums text-ink text-[13px] shrink-0 ml-3">
+            {d.country_share_pct.toFixed(1)}%{" "}
+            <span className="text-[var(--muted)]">vs</span>{" "}
+            {d.dac_avg_share_pct.toFixed(1)}%
           </span>
         </div>
-        <div className="relative h-1.5 rounded bg-[var(--border)]">
+        <div className="relative h-2.5 rounded-sm bg-[var(--border)]">
           <div
-            className="absolute inset-y-0 rounded"
+            className="absolute inset-y-0 rounded-sm"
             style={{
               left: positive ? "50%" : `${50 - magnitude / 2}%`,
               width: `${magnitude / 2}%`,
               background: positive ? "var(--primary)" : "var(--alert)",
             }}
           />
-          <div className="absolute inset-y-0 left-1/2 w-px bg-[var(--border-strong)]" />
+          <div className="absolute inset-y-0 left-1/2 w-[2px] bg-[var(--ink)] opacity-50" />
         </div>
       </div>
       <div
         className={[
-          "font-mono tabular-nums text-[13px] w-14 text-right",
+          "font-mono tabular-nums text-[15px] w-16 text-right font-medium",
           positive ? "text-[var(--primary)]" : "text-[var(--alert)]",
         ].join(" ")}
       >

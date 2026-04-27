@@ -3,6 +3,7 @@ import { Section } from "@/components/section";
 import { Scaffold } from "@/components/scaffold";
 import { Card, Pill } from "@/components/card";
 import { TrustBadge, TrustLegend } from "@/components/trust-badge";
+import { Term } from "@/components/glossary";
 import { ColumnChart } from "@/components/column-chart";
 import { loadMisalignment } from "@/lib/data";
 import { formatUSD } from "@/lib/format";
@@ -38,12 +39,14 @@ export default async function SDGDiagnosePage() {
           <h1 className="mt-4 font-serif text-[34px] md:text-[48px] leading-[1.1] tracking-tight text-ink max-w-3xl">
             Where is private philanthropy{" "}
             <span className="italic text-[var(--primary)]">mis-aligned</span>{" "}
-            with the United Nations goals?
+            with the United Nations <Term k="SDG">goals</Term>?
           </h1>
           <p className="mt-4 text-[15px] md:text-[17px] text-[var(--muted)] leading-relaxed max-w-3xl">
-            Two complementary lenses on the same dataset. The first compares dollars
-            against where the world is furthest from each goal. The second compares
-            dollars against where people in greatest need actually live.
+            Two complementary lenses on the same dataset. The first compares
+            dollars against where the world is furthest from each goal. The
+            second compares dollars against where people in greatest need
+            actually live, using the United Nations list of{" "}
+            <Term k="LDC">Least Developed Countries</Term>.
           </p>
           <div className="mt-6"><TrustLegend /></div>
         </div>
@@ -56,18 +59,27 @@ export default async function SDGDiagnosePage() {
         description="Compares philanthropic dollars per goal against the world's distance-to-target across all 17 goals. Both sides of the chart sum to 100%."
       >
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
-          <Card title="Misalignment per goal" description="Positive bars = over-funded vs need; negative = under-funded.">
+          <Card
+            title="Misalignment per goal, in percentage points"
+            description="Bars above zero are over-funded relative to need. Bars below zero are under-funded. Values shown as percentage-point gaps."
+          >
             <ColumnChart
-              data={sorted.map((r) => ({
-                label: `${r.goal}. ${shortName(r.name)}`,
-                value: Math.abs(r.delta_pp),
-                highlight: r.verdict !== "aligned",
-              }))}
-              unit="count"
-              height={300}
+              data={m.world_level
+                .slice()
+                .sort((a, b) => a.goal - b.goal)
+                .map((r) => ({
+                  label: `${r.goal}. ${shortName(r.name)}`,
+                  value: r.delta_pp,
+                }))}
+              unit="pp"
+              height={320}
+              signed
+              yLabel="Δ percentage points (philanthropy share minus need share)"
+              positiveLabel="Over-funded vs need"
+              negativeLabel="Under-funded vs need"
             />
-            <table className="w-full mt-5 text-[13px] border-t border-[var(--border)]">
-              <thead className="text-[10px] uppercase tracking-wider text-[var(--muted)]">
+            <table className="w-full mt-5 text-[14px] border-t border-[var(--border)]">
+              <thead className="text-[11px] uppercase tracking-wider text-[var(--muted)]">
                 <tr>
                   <th className="text-left font-normal py-2 pr-2">Goal</th>
                   <th className="text-right font-normal py-2 px-2">$ share</th>
