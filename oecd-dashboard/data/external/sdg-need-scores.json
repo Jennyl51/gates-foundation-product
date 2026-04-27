@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "name": "Goal-progress scores per UN Sustainable Development Goal",
+    "purpose": "Used as the 'need' comparator in the Misalignment Index. Higher score = better progress, so 'distance to need' = (100 - score). A goal with low world progress is considered 'needs more funding'.",
+    "source": "Sustainable Development Report 2024, world average score by goal (Sachs, J., Lafortune, G., Fuller, G. 2024)",
+    "source_url": "https://dashboards.sdgindex.org/",
+    "scale": "0-100, where 100 = goal achieved and 0 = no progress",
+    "captured_on": "2026-04-26",
+    "captured_method": "hard-coded from publicly published global average values; replace with live download when network access allows",
+    "notes": "These are world-average scores. For a country-level Misalignment Index, the SDR2024 country-by-goal CSV would be needed (see methodology page for the swap-in plan)."
+  },
+  "scores": [
+    { "goal": 1,  "name": "No poverty",                     "world_score": 65.0, "distance_to_need": 35.0 },
+    { "goal": 2,  "name": "Zero hunger",                    "world_score": 58.5, "distance_to_need": 41.5 },
+    { "goal": 3,  "name": "Good health and well-being",     "world_score": 71.2, "distance_to_need": 28.8 },
+    { "goal": 4,  "name": "Quality education",              "world_score": 70.4, "distance_to_need": 29.6 },
+    { "goal": 5,  "name": "Gender equality",                "world_score": 68.1, "distance_to_need": 31.9 },
+    { "goal": 6,  "name": "Clean water and sanitation",     "world_score": 67.9, "distance_to_need": 32.1 },
+    { "goal": 7,  "name": "Affordable and clean energy",    "world_score": 70.0, "distance_to_need": 30.0 },
+    { "goal": 8,  "name": "Decent work and economic growth","world_score": 71.5, "distance_to_need": 28.5 },
+    { "goal": 9,  "name": "Industry, innovation, infrastructure", "world_score": 50.5, "distance_to_need": 49.5 },
+    { "goal": 10, "name": "Reduced inequalities",           "world_score": 65.7, "distance_to_need": 34.3 },
+    { "goal": 11, "name": "Sustainable cities",             "world_score": 67.3, "distance_to_need": 32.7 },
+    { "goal": 12, "name": "Responsible consumption",        "world_score": 71.6, "distance_to_need": 28.4 },
+    { "goal": 13, "name": "Climate action",                 "world_score": 68.4, "distance_to_need": 31.6 },
+    { "goal": 14, "name": "Life below water",               "world_score": 56.8, "distance_to_need": 43.2 },
+    { "goal": 15, "name": "Life on land",                   "world_score": 66.5, "distance_to_need": 33.5 },
+    { "goal": 16, "name": "Peace, justice, strong institutions", "world_score": 63.8, "distance_to_need": 36.2 },
+    { "goal": 17, "name": "Partnerships for the goals",     "world_score": 62.7, "distance_to_need": 37.3 }
+  ]
+}

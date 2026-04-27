@@ -1,0 +1,30 @@
+{
+  "_meta": {
+    "name": "United Nations list of Least Developed Countries",
+    "purpose": "Used to filter the dataset to the 46 poorest countries when an analyst asks questions like 'how much philanthropic funding went to climate adaptation in the poorest countries last year?'",
+    "source": "UN Office of the High Representative for the Least Developed Countries (UN-OHRLLS), official LDC list as of 2024",
+    "source_url": "https://www.un.org/ohrlls/content/list-ldcs",
+    "captured_on": "2026-04-26",
+    "captured_method": "hard-coded from the UN's published list; this list changes infrequently (countries graduate every few years)",
+    "join_key": "country (string match against the OECD dataset's `country` column; a few names need a manual override — see name_overrides below)"
+  },
+  "countries": [
+    "Afghanistan", "Angola", "Bangladesh", "Benin", "Bhutan", "Burkina Faso",
+    "Burundi", "Cambodia", "Central African Republic", "Chad", "Comoros",
+    "Democratic Republic of the Congo", "Djibouti", "Eritrea", "Ethiopia",
+    "Gambia", "Guinea", "Guinea-Bissau", "Haiti", "Kiribati",
+    "Lao People's Democratic Republic", "Lesotho", "Liberia", "Madagascar",
+    "Malawi", "Mali", "Mauritania", "Mozambique", "Myanmar", "Nepal",
+    "Niger", "Rwanda", "Sao Tome and Principe", "Senegal", "Sierra Leone",
+    "Solomon Islands", "Somalia", "South Sudan", "Sudan", "Timor-Leste",
+    "Togo", "Tuvalu", "Uganda", "United Republic of Tanzania", "Yemen",
+    "Zambia"
+  ],
+  "name_overrides": {
+    "Democratic Republic of the Congo": ["Democratic Republic of Congo", "DR Congo", "Congo, Democratic Republic"],
+    "Lao People's Democratic Republic": ["Laos", "Lao PDR"],
+    "United Republic of Tanzania":      ["Tanzania", "Tanzania, United Republic of"],
+    "Gambia":                           ["Gambia, The", "The Gambia"],
+    "Myanmar":                          ["Myanmar/Burma", "Burma"]
+  }
+}

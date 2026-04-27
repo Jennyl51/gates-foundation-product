@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "name": "OECD Development Assistance Committee member countries",
+    "purpose": "When the dashboard compares one country's philanthropy to its 'peers', the peer group is the OECD-DAC member countries. This is the natural comparator group used in OECD peer reviews.",
+    "source": "OECD Development Assistance Committee, member list as of 2024",
+    "source_url": "https://www.oecd.org/dac/dacmembers.htm",
+    "captured_on": "2026-04-26",
+    "captured_method": "hard-coded; this list changes only when a new country joins (Lithuania joined as the 32nd member in 2024)"
+  },
+  "members": [
+    "Australia", "Austria", "Belgium", "Canada", "Czech Republic", "Denmark",
+    "Estonia", "European Union", "Finland", "France", "Germany", "Greece",
+    "Hungary", "Iceland", "Ireland", "Italy", "Japan", "Korea", "Lithuania",
+    "Luxembourg", "Netherlands", "New Zealand", "Norway", "Poland", "Portugal",
+    "Slovak Republic", "Slovenia", "Spain", "Sweden", "Switzerland",
+    "United Kingdom", "United States"
+  ],
+  "name_overrides": {
+    "Korea":              ["Republic of Korea", "South Korea"],
+    "Slovak Republic":    ["Slovakia"],
+    "Czech Republic":     ["Czechia"],
+    "United States":      ["United States of America", "USA"],
+    "United Kingdom":     ["United Kingdom of Great Britain and Northern Ireland", "UK"]
+  }
+}

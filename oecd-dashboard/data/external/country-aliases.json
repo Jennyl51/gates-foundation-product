@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "name": "Unified country-name alias map",
+    "purpose": "Lets every join in preprocess.py use one canonical name per country. Avoids missed matches like 'Tanzania' vs 'United Republic of Tanzania' or 'Türkiye' vs 'Turkey'.",
+    "captured_on": "2026-04-26",
+    "captured_method": "hand-built from the unique country values observed in the OECD spreadsheet plus aliases used by the four reference files (LDC list, populations, DAC members, SDG scores). Unmatched names are logged by preprocess.py to stderr.",
+    "structure": "Each key is the canonical name. Each value is the list of alternative names that should resolve to that canonical."
+  },
+  "aliases": {
+    "Tanzania": ["United Republic of Tanzania", "Tanzania, United Republic of"],
+    "Turkey": ["Türkiye", "Turkiye"],
+    "Syria": ["Syrian Arab Republic"],
+    "Sao Tome and Principe": ["São Tomé and Príncipe", "Sao Tome & Principe"],
+    "Lao People's Democratic Republic": ["Laos", "Lao PDR", "Lao People's Democratic Republic (the)"],
+    "China (People's Republic of)": ["China", "PRC", "People's Republic of China", "China (Mainland)"],
+    "Democratic Republic of the Congo": ["DR Congo", "DRC", "Congo, Democratic Republic", "Congo, Dem. Rep.", "Democratic Republic of Congo"],
+    "Congo": ["Republic of Congo", "Congo, Republic of", "Congo, Rep."],
+    "Côte d'Ivoire": ["Cote d'Ivoire", "Ivory Coast"],
+    "Iran": ["Iran (Islamic Republic of)", "Islamic Republic of Iran"],
+    "North Korea": ["Democratic People's Republic of Korea", "DPRK", "Korea, Dem. People's Rep."],
+    "Korea": ["Republic of Korea", "South Korea", "Korea, Rep.", "Korea, Republic of"],
+    "Czech Republic": ["Czechia"],
+    "Slovak Republic": ["Slovakia"],
+    "United States": ["United States of America", "USA", "U.S.", "U.S.A.", "US"],
+    "United Kingdom": ["United Kingdom of Great Britain and Northern Ireland", "UK", "U.K.", "Britain", "Great Britain"],
+    "Viet Nam": ["Vietnam"],
+    "Eswatini": ["Swaziland", "Kingdom of Eswatini"],
+    "Cabo Verde": ["Cape Verde"],
+    "Gambia": ["Gambia, The", "The Gambia"],
+    "Myanmar": ["Burma", "Myanmar/Burma"],
+    "Bolivia": ["Bolivia (Plurinational State of)", "Plurinational State of Bolivia"],
+    "Venezuela": ["Venezuela (Bolivarian Republic of)", "Bolivarian Republic of Venezuela"],
+    "West Bank and Gaza Strip": ["Palestinian Territories", "Palestine", "Occupied Palestinian Territory", "Palestinian Authority"],
+    "Micronesia": ["Micronesia (Federated States of)", "Federated States of Micronesia"],
+    "Moldova": ["Moldova, Republic of", "Republic of Moldova"]
+  },
+  "skip_as_country": [
+    "Bilateral, unspecified",
+    "Developing countries, unspecified",
+    "GLOBAL or unspecified",
+    "States Ex-Yugoslavia unspecified",
+    "Africa, regional", "America, regional", "Asia, regional", "Europe, regional",
+    "Middle East, regional", "Oceania, regional", "Caribbean, regional",
+    "Caribbean & Central America, regional", "Central America, regional",
+    "Central Asia, regional", "Eastern Africa, regional", "Far East Asia, regional",
+    "Micronesia, regional", "Middle Africa, regional", "North of Sahara, regional",
+    "South America, regional", "South & Central Asia, regional", "South Asia, regional",
+    "South of Sahara, regional", "Southern Africa, regional", "Western Africa, regional",
+    "North & Central America, regional"
+  ],
+  "comment_skip": "These values are official OECD recipient codes for grants without a single country recipient. They contribute to total-dollars metrics but are excluded from country-level rankings, the LDC tier, and per-capita views."
+}

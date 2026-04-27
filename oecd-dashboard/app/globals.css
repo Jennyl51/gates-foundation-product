@@ -1,26 +1,150 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens — OECD philanthropy dashboard
+ *
+ * Palette: editorial / development-aid feel — deep teal primary, warm ochre
+ * accent, cream paper background. Avoid generic SaaS blue.
+ *
+ *   primary    #0F4C5C  sophisticated teal (calls back to globe / water)
+ *   accent     #C77B3D  warm ochre (warmth, contrast, "earth")
+ *   alert      #B7472A  terracotta (used sparingly for highlights)
+ *   forest     #4A7C59  positive / climate
+ *   paper      #F8F5EE  warm off-white background
+ *   surface    #FFFFFF  cards
+ *   border     #E8E1D1  warm divider
+ *   ink        #1A1A1A  body text
+ *   muted      #6B6B6B  secondary text
+ *   subtle     #9A9A9A  tertiary text
+ *
+ * Typography:
+ *   --font-serif: editorial display (Source Serif 4) — titles, hero numbers
+ *   --font-sans : Geist Sans — body / UI
+ *   --font-mono : Geist Mono — codes / data labels
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f8f5ee;
+  --surface: #ffffff;
+  --border: #e8e1d1;
+  --border-strong: #d4cab2;
+  --ink: #1a1a1a;
+  --muted: #6b6b6b;
+  --subtle: #9a9a9a;
+
+  --primary: #0f4c5c;
+  --primary-soft: #dde9ec;
+  --primary-deep: #073642;
+
+  --accent: #c77b3d;
+  --accent-soft: #f3e4d2;
+
+  --alert: #b7472a;
+  --forest: #4a7c59;
+  --forest-soft: #dde7df;
+
+  /* chart palette — ordered for use in legends */
+  --c1: #0f4c5c;
+  --c2: #c77b3d;
+  --c3: #4a7c59;
+  --c4: #b7472a;
+  --c5: #6b8e9b;
+  --c6: #a37d4f;
+  --c7: #2f6e7a;
+  --c8: #8b5a2b;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-primary: var(--primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-deep: var(--primary-deep);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-alert: var(--alert);
+  --color-forest: var(--forest);
+  --color-forest-soft: var(--forest-soft);
+  --color-c1: var(--c1);
+  --color-c2: var(--c2);
+  --color-c3: var(--c3);
+  --color-c4: var(--c4);
+  --color-c5: var(--c5);
+  --color-c6: var(--c6);
+  --color-c7: var(--c7);
+  --color-c8: var(--c8);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-source-serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  font-feature-settings: "ss01", "ss02";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+.font-serif,
+.serif {
+  font-family: var(--font-source-serif), "Iowan Old Style", Georgia, serif;
+  font-feature-settings: "kern", "liga", "onum";
+}
+
+.font-mono,
+.mono {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+/* tabular numbers for everything that's a stat */
+.num,
+.stat,
+table,
+td,
+th {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--primary);
+  color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* hide scrollbar visually inside scrolling tables but keep functionality */
+.scroll-hide::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scroll-hide::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+

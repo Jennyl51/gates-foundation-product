@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# raw OECD data (60MB CSV) — keep out of git, rebuild JSONs locally
+/data/raw/*.csv
+
