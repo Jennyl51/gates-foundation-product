@@ -39,7 +39,9 @@ export function ExplorerClient({
       if (r.rm) sets.rm.add(r.rm);
       if (r.s) sets.s.add(r.s);
     }
-    out.y = Array.from(sets.y).sort();
+    out.y = Array.from(sets.y)
+      .filter((y) => y !== "2020-2023")
+      .sort();
     out.dc = Array.from(sets.dc).sort();
     out.rm = Array.from(sets.rm).sort();
     out.s = Array.from(sets.s).sort();
@@ -71,6 +73,7 @@ export function ExplorerClient({
   // filter rows
   const filtered = useMemo(() => {
     return rows.filter((r) => {
+      if (r.y === "2020-2023") return false;
       if (filters.y.size && (!r.y || !filters.y.has(r.y))) return false;
       if (filters.dc.size && (!r.dc || !filters.dc.has(r.dc))) return false;
       if (filters.rm.size && (!r.rm || !filters.rm.has(r.rm))) return false;
@@ -110,6 +113,39 @@ export function ExplorerClient({
   const byDonorCountry = useMemo(() => aggregateBy("dc"), [aggregateBy]);
   const byRegion = useMemo(() => aggregateBy("rm"), [aggregateBy]);
   const bySector = useMemo(() => aggregateBy("s"), [aggregateBy]);
+
+  const timeSeriesByDonorCountry = useMemo(() => {
+    const selectedDonors =
+      filters.dc.size > 0
+        ? byDonorCountry
+            .filter((d) => filters.dc.has(d.label))
+            .slice(0, 3)
+            .map((d) => d.label)
+        : [];
+  
+    if (selectedDonors.length === 0) return [];
+  
+    return selectedDonors.map((donor) => {
+      const donorRows = filtered.filter((r) => r.dc === donor);
+  
+      const yearly = new Map<string, number>();
+  
+      for (const r of donorRows) {
+        if (!r.y || !/^\d+$/.test(r.y)) continue;
+        yearly.set(r.y, (yearly.get(r.y) ?? 0) + r.v);
+      }
+  
+      return {
+        name: donor,
+        data: Array.from(yearly.entries())
+          .sort((a, b) => Number(a[0]) - Number(b[0]))
+          .map(([year, value]) => ({
+            x: Number(year),
+            y: value,
+          })),
+      };
+    });
+    }, [filtered, filters.dc, byDonorCountry]);
 
   return (
     <div className="space-y-6">
@@ -187,15 +223,17 @@ export function ExplorerClient({
         <Card title="By year">
           {byYear.length > 0 ? (
             <TimeSeriesChart
-              series={[
-                {
-                  name: "Disbursement in current slice",
-                  data: byYear
-                    .filter((r) => r.label !== " " && /^\d+$/.test(r.label))
-                    .sort((a, b) => Number(a.label) - Number(b.label))
-                    .map((r) => ({ x: Number(r.label), y: r.v })),
-                },
-              ]}
+            series={[
+              {
+                name: "Total current slice",
+                data: byYear
+                  .filter((r) => r.label !== " " && /^\d+$/.test(r.label))
+                  .sort((a, b) => Number(a.label) - Number(b.label))
+                  .map((r) => ({ x: Number(r.label), y: r.v })),
+                color: "var(--primary)",
+              },
+              ...timeSeriesByDonorCountry,
+            ]}
               yLabel="Disbursement (USD millions)"
             />
           ) : (

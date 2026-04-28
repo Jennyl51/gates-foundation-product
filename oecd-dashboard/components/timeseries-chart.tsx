@@ -6,6 +6,9 @@
  *     yLabel="USD mn"
  *   />
  */
+"use client";
+
+import { useState } from "react";
 import { formatUSD } from "@/lib/format";
 
 export type TSPoint = { x: number | string; y: number };
@@ -35,13 +38,14 @@ export function TimeSeriesChart({
     )
     .map((d) => d.x);
 
-  const maxY = Math.max(0, ...series.flatMap((s) => s.data.map((p) => p.y)));
-  const ticks = niceTicks(maxY, 4);
-  const yMax = ticks[ticks.length - 1];
+    const maxY = Math.max(0, ...series.flatMap((s) => s.data.map((p) => p.y)));
+    const paddedMaxY = maxY * 1.15;
+    const ticks = niceTicks(paddedMaxY, 4);
+    const yMax = Math.max(paddedMaxY, ticks[ticks.length - 1]);
 
   const PAD_L = 56;
   const PAD_R = 16;
-  const PAD_T = 16;
+  const PAD_T = 28;
   const PAD_B = 28;
   const W = 720;
   const H = height;
@@ -56,6 +60,14 @@ export function TimeSeriesChart({
   const yPos = (y: number) => PAD_T + innerH - (y / yMax) * innerH;
 
   const colors = ["var(--primary)", "var(--accent)", "var(--forest)", "var(--c4)", "var(--c5)", "var(--c6)"];
+
+  const [tooltip, setTooltip] = useState<{
+    x: number;
+    y: number;
+    label: string;
+    value: string;
+    series: string;
+  } | null>(null);
 
   return (
     <div className="w-full">
@@ -133,9 +145,10 @@ export function TimeSeriesChart({
                 `${j === 0 ? "M" : "L"} ${xPos(String(p.x))} ${yPos(p.y)}`
             )
             .join(" ");
+          
           // area path (only for single-series feel)
           const areaPath =
-            series.length === 1
+            i === 0
               ? `${path} L ${xPos(String(points[points.length - 1].x))} ${yPos(0)} L ${xPos(String(points[0].x))} ${yPos(0)} Z`
               : null;
           return (
@@ -147,7 +160,8 @@ export function TimeSeriesChart({
                 d={path}
                 fill="none"
                 stroke={color}
-                strokeWidth={1.8}
+                strokeWidth={i === 0 ? 2.8 : 2}
+                opacity={i === 0 ? 1 : 0.6}
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
@@ -158,9 +172,30 @@ export function TimeSeriesChart({
                     <circle
                       cx={xPos(String(p.x))}
                       cy={yPos(p.y)}
-                      r={last && emphasizeLast ? 4 : 2.5}
+                      r={last && emphasizeLast ? (i === 0 ? 4.5 : 3.5) : i === 0 ? 3 : 2.5}
                       fill={color}
+                      opacity={i === 0 ? 1 : 0.7}
                     />
+                    <circle
+                      cx={xPos(String(p.x))}
+                      cy={yPos(p.y)}
+                      r={12}
+                      fill="transparent"
+                      onMouseEnter={() =>
+                        setTooltip({
+                          x: xPos(String(p.x)),
+                          y: yPos(p.y),
+                          label: String(p.x),
+                          value:
+                            unit === "USD"
+                              ? formatUSD(p.y, { compact: false })
+                              : p.y.toLocaleString(),
+                          series: s.name,
+                        })
+                      }
+                      onMouseLeave={() => setTooltip(null)}
+                    />
+
                     {last && emphasizeLast && (
                       <text
                         x={xPos(String(p.x))}
@@ -180,6 +215,46 @@ export function TimeSeriesChart({
             </g>
           );
         })}
+                {tooltip && (
+          <g pointerEvents="none">
+            <line
+              x1={tooltip.x}
+              x2={tooltip.x}
+              y1={PAD_T}
+              y2={PAD_T + innerH}
+              stroke="var(--border-strong)"
+              strokeDasharray="4 4"
+            />
+            <rect
+              x={Math.min(tooltip.x + 10, W - 210)}
+              y={Math.max(tooltip.y - 52, 8)}
+              width={200}
+              height={46}
+              rx={6}
+              fill="var(--surface)"
+              stroke="var(--border)"
+            />
+            <text
+              x={Math.min(tooltip.x + 22, W - 198)}
+              y={Math.max(tooltip.y - 31, 29)}
+              fontSize={11}
+              fontFamily="var(--font-geist-mono)"
+              fill="var(--muted)"
+            >
+              {tooltip.series} · {tooltip.label}
+            </text>
+            <text
+              x={Math.min(tooltip.x + 22, W - 198)}
+              y={Math.max(tooltip.y - 13, 47)}
+              fontSize={14}
+              fontFamily="var(--font-source-serif)"
+              fill="var(--primary)"
+              fontWeight={600}
+            >
+              {tooltip.value}
+            </text>
+          </g>
+        )}
       </svg>
       <div className="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-[12px] text-ink">
         {series.map((s, i) => (
