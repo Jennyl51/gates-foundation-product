@@ -130,7 +130,7 @@ The full decision trail is in `working/01..06.md`.
 
 These were considered and deliberately deferred for the submission deadline. Each would meaningfully strengthen the dashboard.
 
-### Future improvements
+### Priority improvements
 
 1. **Country-by-goal SDG misalignment lens.** The current Goal Alignment page uses world-average need scores. The Sustainable Development Report 2024 publishes country-by-goal scores that, joined to the recipient column in the OECD CSV, would let an analyst see which specific countries are most under-funded on each goal. Build environment couldn't reach the SDR website, so this was punted to a manual download step. Effort: 30 minutes once the CSV is in hand.
 2. **Reconciliation against OECD canonical published totals.** Today every figure on the dashboard ships at trust-tier B (recomputed correctly from the source spreadsheet, not yet matched to OECD's own published table). A manually built `data/canonicals.json` mapping our pivots to OECD DAC Table I / II / III figures would let figures lift to tier A. Effort: 45 to 60 minutes.
