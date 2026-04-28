@@ -43,7 +43,7 @@ export default async function SDGDiagnosePage() {
             with the United Nations <Term k="SDG">goals</Term>?
           </h1>
           <p className="mt-4 text-[15px] md:text-[17px] text-[var(--muted)] leading-relaxed max-w-3xl">
-            Two complementary lenses on the same dataset. The first compares
+            Two complementary lenses applied to the same dataset. The first compares
             dollars against where the world is furthest from each goal. The
             second compares dollars against where people in greatest need
             actually live, using the United Nations list of{" "}

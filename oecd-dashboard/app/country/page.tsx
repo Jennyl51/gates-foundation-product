@@ -20,7 +20,7 @@ export default async function CountryIndexPage() {
       cta={
         <Link
           href="/country/compare"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary)] text-white text-[14px] font-medium hover:bg-[var(--primary-deep)] transition-colors shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary)] text-white text-[14px] font-medium hover:bg-[var(--primary-deep)] hover:text-white transition-colors shadow-sm"
         >
           Compare two countries →
         </Link>

@@ -45,7 +45,7 @@ export default async function HomePage() {
             and what should we do about it?
           </h1>
           <p className="mt-7 text-[18px] md:text-[20px] text-ink leading-relaxed max-w-3xl">
-            A reading of the <Term>OECD</Term> philanthropy database, framed for
+            A reading of the <Term>OECD</Term>{" "}philanthropy database, framed for
             the policy analyst&rsquo;s brief.
           </p>
           <p className="mt-4 text-[16px] md:text-[17px] text-[var(--muted)] leading-relaxed max-w-3xl">
@@ -196,7 +196,7 @@ export default async function HomePage() {
       <Section
         eyebrow="Counter-intuitive finding"
         title="Philanthropy follows population, not poverty."
-        description="The 46 United Nations Least Developed Countries hold 17% of the recipient-country population and receive 17% of named-country dollars. The country-tier mis-alignment is essentially zero. at this level."
+        description="The 46 United Nations Least Developed Countries hold 17% of the recipient-country population and receive 17% of named-country dollars. The country-tier misalignment is essentially zero at this level."
       >
         <Scaffold
           eyebrow="Draft for parliamentary response"
@@ -259,7 +259,7 @@ export default async function HomePage() {
               </h3>
               <p className="mt-2 text-white/80 max-w-xl text-[15px] leading-relaxed">
                 Each page produces a copy-pastable scaffold with claim, evidence and
-                caveat. plus a one-line foundation-reader callout for parity.
+                caveat. Plus a one-line foundation-reader callout for parity.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
