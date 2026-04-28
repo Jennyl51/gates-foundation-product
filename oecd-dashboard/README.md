@@ -1,6 +1,6 @@
 # OECD Decision Atlas
 
-Spring 2026 Case Competition. Product Track. A reading of the OECD philanthropy database, framed for the policy analyst's brief.
+Spring 2026 Case Competition. Product Track. A reading of the OECD philanthropy database.
 
 Team: Ayah, Maxime, Jenny.
 
