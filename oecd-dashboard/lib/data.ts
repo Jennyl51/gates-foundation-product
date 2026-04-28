@@ -242,12 +242,14 @@ export type KpiHighlights = Record<
     stats?: {
       label: string;
       value: string;
+      unit?: string;
       note?: string;
     }[];
     bullets: string[];
     table?: {
       label: string;
       value: string;
+      unit?: string;
       note?: string;
     }[];
   }

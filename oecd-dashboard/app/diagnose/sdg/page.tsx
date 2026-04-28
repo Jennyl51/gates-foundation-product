@@ -4,7 +4,7 @@ import { Scaffold } from "@/components/scaffold";
 import { Card, Pill } from "@/components/card";
 import { TrustBadge, TrustLegend } from "@/components/trust-badge";
 import { Term } from "@/components/glossary";
-import { PlotlyMisalignment } from "@/components/plotly-misalignment";
+import { SdgMisalignmentSection } from "@/components/sdg-misalignment-section";
 import { loadMisalignment } from "@/lib/data";
 import { formatUSD } from "@/lib/format";
 
@@ -61,46 +61,9 @@ export default async function SDGDiagnosePage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
           <Card
             title="Misalignment per goal, in percentage points"
-            description="Each row is one of the 17 UN goals. Bars going right are over-funded relative to need. Bars going left are under-funded. Hover any bar for the full breakdown of phil share, need share, and dollar amount."
+            description="Each row is one of the 17 UN goals. Bars going right are over-funded relative to need. Bars going left are under-funded. Re-sort by any column using the controls above the chart. Hover any bar for the full breakdown of phil share, need share, and dollar amount."
           >
-            <PlotlyMisalignment rows={m.world_level} />
-            <table className="w-full mt-5 text-[14px] border-t border-[var(--border)]">
-              <thead className="text-[11px] uppercase tracking-wider text-[var(--muted)]">
-                <tr>
-                  <th className="text-left font-normal py-2 pr-2">Goal</th>
-                  <th className="text-right font-normal py-2 px-2">$ share</th>
-                  <th className="text-right font-normal py-2 px-2">Need share</th>
-                  <th className="text-right font-normal py-2 pl-2">Δ pp</th>
-                </tr>
-              </thead>
-              <tbody>
-                {m.world_level.map((r) => (
-                  <tr key={r.goal} className="border-t border-[var(--border)]">
-                    <td className="py-1.5 pr-2 text-ink">
-                      <span className="font-mono text-[var(--subtle)] mr-2">{r.goal}</span>
-                      {r.name}
-                    </td>
-                    <td className="py-1.5 px-2 text-right font-mono tabular-nums text-[var(--muted)]">
-                      {r.phil_share_pct.toFixed(1)}%
-                    </td>
-                    <td className="py-1.5 px-2 text-right font-mono tabular-nums text-[var(--muted)]">
-                      {r.need_share_pct.toFixed(1)}%
-                    </td>
-                    <td
-                      className={[
-                        "py-1.5 pl-2 text-right font-mono tabular-nums",
-                        r.delta_pp >= 2 ? "text-[var(--accent)]" :
-                          r.delta_pp <= -2 ? "text-[var(--alert)]" :
-                            "text-[var(--subtle)]",
-                      ].join(" ")}
-                    >
-                      {r.delta_pp >= 0 ? "+" : ""}
-                      {r.delta_pp.toFixed(1)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <SdgMisalignmentSection rows={m.world_level} />
           </Card>
 
           <div className="space-y-5">

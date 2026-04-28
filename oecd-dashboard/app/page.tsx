@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Section } from "@/components/section";
 import { Card, Pill } from "@/components/card";
-import { Scaffold, KPI } from "@/components/scaffold";
+import { Scaffold } from "@/components/scaffold";
 import { TrustBadge, TrustLegend } from "@/components/trust-badge";
 import { Term } from "@/components/glossary";
 import { KpiSelector } from "@/components/kpi-selector";

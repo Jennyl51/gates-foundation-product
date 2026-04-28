@@ -10,12 +10,19 @@ import type { WorldMisalignmentRow } from "@/lib/data";
  * (we hide it by default to keep the visual editorial; users can hold Shift
  * and right-click to access browser save).
  */
-export function PlotlyMisalignment({ rows }: { rows: WorldMisalignmentRow[] }) {
-  // Sort by goal number so canonical order
-  const sorted = [...rows].sort((a, b) => a.goal - b.goal);
+export function PlotlyMisalignment({
+  rows,
+  reverseY = true,
+}: {
+  rows: WorldMisalignmentRow[];
+  /** When the parent has already sorted, set false so we render rows in given order. */
+  reverseY?: boolean;
+}) {
+  // Render in the order provided. Caller controls sort.
+  const sorted = rows;
 
   // Plotly horizontal bars: y is the categorical axis (we want goal labels),
-  // x is the value. Reverse y so goal 1 is at the top.
+  // x is the value.
   const labels = sorted.map((r) => `${r.goal}. ${r.name}`);
   const values = sorted.map((r) => r.delta_pp);
   const colors = sorted.map((r) =>
@@ -56,7 +63,10 @@ export function PlotlyMisalignment({ rows }: { rows: WorldMisalignmentRow[] }) {
 
   const layout = {
     barmode: "relative",
-    margin: { l: 220, r: 60, t: 10, b: 50 },
+    // Left margin must fit the longest goal label (Goal 9: "Industry,
+    // innovation, infrastructure" ~ 39 characters at 13 px). 320 px keeps
+    // every label fully visible without truncation.
+    margin: { l: 320, r: 60, t: 10, b: 50 },
     height: 520,
     xaxis: {
       title: { text: "Δ percentage points (philanthropy share minus need share)", standoff: 16, font: { size: 12 } },
@@ -70,8 +80,9 @@ export function PlotlyMisalignment({ rows }: { rows: WorldMisalignmentRow[] }) {
       tickfont: { size: 12 },
     },
     yaxis: {
-      autorange: "reversed",
+      autorange: reverseY ? ("reversed" as const) : (true as const),
       tickfont: { size: 13, color: "#14110d" },
+      automargin: true,
     },
     showlegend: false,
     shapes: [

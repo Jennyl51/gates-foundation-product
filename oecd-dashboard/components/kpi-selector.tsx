@@ -13,6 +13,9 @@ type KpiItem = {
   value: ReactNode;
   sub?: ReactNode;
   trustTier?: "A" | "B" | "C";
+  /** Visual hint for the active KPI tile. The KpiSelector also forces accent
+   *  on whichever item is currently selected, so this is a default state. */
+  accent?: boolean;
 };
 
 export function KpiSelector({
