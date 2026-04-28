@@ -8,7 +8,7 @@ UC Berkeley
 
 ### Basic Git Commands & Set up ###
 **Set Up**
-- Recommended approach: Create a new folder on your local desktop for case competition
+- Recommended approach: Create a new folder on your local desktop
 - Clone the remote git repository:
   - Run `git remote https://github.com/Jennyl51/gates-foundation-product`
 - Change directory to gates-foundation-product `cd gates-foundation-product`
