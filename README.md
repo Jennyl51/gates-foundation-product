@@ -2,8 +2,9 @@
 
 A reading of the OECD philanthropy database.
 
-SP26 DSS x Datagood x OP Case Competition 
+SP26 DSS x Datagood x OP Case Competition Apr 27
 Product Track - [Ayah Elzein, Maxime Chung, Jenny Liang]
+UC Berkeley
 
 ### Basic Git Commands & Set up ###
 **Set Up**
