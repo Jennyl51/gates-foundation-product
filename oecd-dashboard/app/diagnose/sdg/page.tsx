@@ -10,7 +10,7 @@ import { loadMisalignment } from "@/lib/data";
 import { formatUSD } from "@/lib/format";
 
 export const metadata = {
-  title: "Goal alignment. OECD Decision Atlas",
+  title: "Goal alignment | OECD Decision Atlas",
 };
 
 export default async function SDGDiagnosePage() {
@@ -123,7 +123,7 @@ export default async function SDGDiagnosePage() {
                 <>
                   &ldquo;Need&rdquo; here is the world&rsquo;s distance-to-target on each goal,
                   averaged globally. A country-level need lens (e.g. SDR2024
-                  country-by-goal scores) would shift these magnitudes. for example,
+                  country-by-goal scores) would shift these magnitudes; for example,
                   Goal 6 looks more under-funded when weighted by the populations
                   living in low-progress countries.
                 </>

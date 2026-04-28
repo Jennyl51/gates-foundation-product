@@ -21,7 +21,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const profile = await loadDonorProfile(slug);
   if (!profile) return { title: "Foundation not found" };
-  return { title: `${profile.name} — OECD Philanthropy Atlas` };
+  return { title: `${profile.name} | OECD Decision Atlas` };
 }
 
 export default async function DonorProfilePage({

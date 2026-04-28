@@ -23,7 +23,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const profile = await loadCountryProfile(slug);
   if (!profile) return { title: "Country profile not found" };
-  return { title: `${profile.country}. Country profile. OECD Decision Atlas` };
+  return { title: `${profile.country} country profile | OECD Decision Atlas` };
 }
 
 export default async function CountryPage({

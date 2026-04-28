@@ -6,7 +6,7 @@ import { ColumnChart } from "@/components/column-chart";
 import { loadMarkers, loadSDG, loadSummary, loadChannels } from "@/lib/data";
 import { formatNumber, formatUSD, pct } from "@/lib/format";
 
-export const metadata = { title: "Insights — OECD Philanthropy Atlas" };
+export const metadata = { title: "Insights | OECD Decision Atlas" };
 
 const SDG_LABELS: Record<number, string> = {
   1: "No poverty",

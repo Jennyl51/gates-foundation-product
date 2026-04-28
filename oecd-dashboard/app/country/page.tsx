@@ -5,7 +5,7 @@ import { TrustBadge } from "@/components/trust-badge";
 import { loadPeerSummaries } from "@/lib/data";
 import { formatUSD } from "@/lib/format";
 
-export const metadata = { title: "Country profiles. OECD Decision Atlas" };
+export const metadata = { title: "Country profiles | OECD Decision Atlas" };
 
 export default async function CountryIndexPage() {
   const peers = await loadPeerSummaries();
@@ -16,7 +16,15 @@ export default async function CountryIndexPage() {
     <Section
       eyebrow="Country profiles"
       title="Donor-country profiles for the OECD philanthropy field"
-      description="Each profile compares one country's private philanthropy to the OECD-DAC average. Click into any country to see the full peer-comparison scaffold ready to drop into a peer-review chapter."
+      description="Each profile compares one country's private philanthropy to the OECD-DAC average. Click into any country to see the full peer-comparison scaffold ready to drop into a peer-review chapter, or place two countries side by side."
+      cta={
+        <Link
+          href="/country/compare"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary)] text-white text-[14px] font-medium hover:bg-[var(--primary-deep)] transition-colors shadow-sm"
+        >
+          Compare two countries →
+        </Link>
+      }
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Group title="Stable peer comparison" sub={`Total disbursement ≥ $100M (${stable.length} countries)`}>

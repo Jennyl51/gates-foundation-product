@@ -5,7 +5,7 @@ import { BarList } from "@/components/bar-list";
 import { loadTopDonors, loadSummary, loadDonorCountries } from "@/lib/data";
 import { formatNumber, formatUSD, pct } from "@/lib/format";
 
-export const metadata = { title: "Donors — OECD Philanthropy Atlas" };
+export const metadata = { title: "Donors | OECD Decision Atlas" };
 
 export default async function DonorsIndexPage() {
   const [donors, summary, donorCountries] = await Promise.all([

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { JumpSearch } from "./jump-search";
 
 const NAV_ITEMS: { href: string; label: string }[] = [
   { href: "/", label: "Decision brief" },
@@ -47,8 +48,8 @@ export default function Nav() {
   );
 })}
         </nav>
-        <div className="hidden sm:block text-[12px] text-[var(--subtle)] font-mono">
-          2020 - 2023. USD constant
+        <div className="hidden md:block">
+          <JumpSearch />
         </div>
       </div>
     </header>
