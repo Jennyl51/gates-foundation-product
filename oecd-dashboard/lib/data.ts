@@ -234,6 +234,26 @@ export type SimpsonsFlag = {
   verdict: string;
 };
 
+export type KpiId = "disbursed" | "foundations" | "recipients" | "cross_border";
+export type KpiHighlights = Record<
+  KpiId,
+  {
+    title: string;
+    stats?: {
+      label: string;
+      value: string;
+      note?: string;
+    }[];
+    bullets: string[];
+    table?: {
+      label: string;
+      value: string;
+      note?: string;
+    }[];
+  }
+>;
+
+
 export const loadMisalignment = () => readJson<Misalignment>("misalignment.json");
 export const loadPeerSummaries = () => readJson<PeerSummary[]>("peer-comparators.json");
 export const loadConcentration = () => readJson<ConcentrationRow[]>("concentration.json");
@@ -272,6 +292,7 @@ export const loadDonorXCountry = () => readJson<DonorXCountry>("donor-x-country.
 export const loadJudgeQuestions = () => readJson<JudgeAnswer[]>("judge-questions.json");
 export const loadExplorer = () => readJson<{ rows: ExplorerRow[] }>("explorer-aggregates.json");
 export const loadLegend = () => readJson<LegendEntry[]>("legend.json");
+export const loadKpiHighlights = () => readJson<KpiHighlights>("kpi-highlights.json");
 
 export async function loadDonorProfile(slug: string): Promise<DonorProfile | null> {
   try {

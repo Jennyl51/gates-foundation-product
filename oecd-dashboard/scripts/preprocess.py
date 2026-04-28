@@ -1105,5 +1105,231 @@ write_json("alias-diagnostics.json", {
     "n_skip_as_country": len(skip_as_country),
 })
 
+# ----- 20. KPI highlights for homepage interactive cards----------
+
+print("Building KPI highlights...")
+
+sector_df = (
+    df.groupby("sector_description", dropna=True)
+      .agg(disbursement=("disb", "sum"), n_grants=("disb", "count"))
+      .reset_index()
+      .sort_values("disbursement", ascending=False)
+)
+
+donor_country_df = (
+    df.groupby("Donor_country", dropna=True)
+      .agg(
+          disbursement=("disb", "sum"),
+          n_foundations=("organization_name", "nunique"),
+          n_grants=("disb", "count"),
+      )
+      .reset_index()
+      .sort_values("disbursement", ascending=False)
+)
+
+recipient_df = (
+    df.groupby(["country", "region_macro"], dropna=True)
+      .agg(
+          disbursement=("disb", "sum"),
+          n_grants=("disb", "count"),
+          n_donors=("organization_name", "nunique"),
+      )
+      .reset_index()
+      .sort_values("disbursement", ascending=False)
+)
+
+year_df = (
+    single_year_df.groupby("year_int", dropna=True)
+      .agg(disbursement=("disb", "sum"), n_grants=("disb", "count"))
+      .reset_index()
+      .sort_values("year_int")
+)
+
+donor_df = (
+    df.groupby(["organization_name", "Donor_country"], dropna=True)
+      .agg(disbursement=("disb", "sum"), n_grants=("disb", "count"))
+      .reset_index()
+      .sort_values("disbursement", ascending=False)
+)
+
+cross_df = df[df["type_of_flow"] == "Cross-border"]
+
+cross_recipient_df = (
+    cross_df.groupby(["country", "region_macro"], dropna=True)
+      .agg(disbursement=("disb", "sum"), n_grants=("disb", "count"))
+      .reset_index()
+      .sort_values("disbursement", ascending=False)
+)
+
+cross_sector_df = (
+    cross_df.groupby("sector_description", dropna=True)
+      .agg(disbursement=("disb", "sum"), n_grants=("disb", "count"))
+      .reset_index()
+      .sort_values("disbursement", ascending=False)
+)
+
+cross_donor_df = (
+    cross_df.groupby("organization_name", dropna=True)
+      .agg(disbursement=("disb", "sum"), n_grants=("disb", "count"))
+      .reset_index()
+      .sort_values("disbursement", ascending=False)
+)
+
+sdg_df = []
+sdg_source = df.dropna(subset=["sdg_focus"])
+for _, r in sdg_source.iterrows():
+    targets = [t.strip() for t in re.split(r"[;,]", str(r["sdg_focus"])) if t.strip()]
+    seen = set()
+    for t in targets:
+        m = re.match(r"(\d+)", t)
+        if not m:
+            continue
+        goal = int(m.group(1))
+        if goal in seen or goal < 1 or goal > 17:
+            continue
+        seen.add(goal)
+        sdg_df.append({"goal": f"SDG {goal}", "disb": r["disb"]})
+
+sdg_top = []
+if sdg_df:
+    sdg_tmp = pd.DataFrame(sdg_df)
+    sdg_top = (
+        sdg_tmp.groupby("goal")["disb"]
+        .sum()
+        .sort_values(ascending=False)
+        .head(3)
+    )
+
+kpi_highlights = {
+    "disbursed": {
+        "title": "Disbursement shows the scale and timing of foundation funding.",
+        "stats": [
+            {"label": "Total disbursed", "value": safe_round(df["disb"].sum(), 1), "unit": "USD mn"},
+            {"label": "Total grants", "value": int(len(df)), "unit": "grants"},
+            {"label": "Average per grant", "value": safe_round(df["disb"].sum() / len(df), 3), "unit": "USD mn"},
+        ],
+        "bullets": [
+            "Use disbursement as the closest available measure of money actually released, not just promised.",
+            "Yearly totals help separate one-time crisis spikes from stable funding patterns.",
+            "Organization totals reveal whether the overall picture is shaped by a few large foundations."
+        ],
+        "table_title": "Disbursement by year",
+        "table": [
+            {
+                "label": str(int(r["year_int"])),
+                "value": safe_round(r["disbursement"], 2),
+                "unit": "USD mn",
+                "detail": f"{int(r['n_grants']):,} grants"
+            }
+            for _, r in year_df.iterrows()
+        ],
+    },
+    "foundations": {
+        "title": "Foundation count shows who shapes the philanthropic funding landscape.",
+        "stats": [
+            {"label": "Foundations", "value": int(df["organization_name"].nunique()), "unit": "foundations"},
+            {"label": "Home countries", "value": int(df["Donor_country"].nunique()), "unit": "countries"},
+            {"label": "Top donor home country", "value": str(donor_country_df.iloc[0]["Donor_country"]), "unit": ""},
+        ],
+        "bullets": [
+            "A high foundation count does not mean influence is evenly distributed.",
+            "Donor home countries show where philanthropic capital is legally based.",
+            "SDG focus can be used to compare whether foundations cluster around the same development goals."
+        ],
+        "table_title": "Top foundation home countries",
+        "table": [
+            {
+                "label": r["Donor_country"],
+                "value": safe_round(r["disbursement"], 2),
+                "unit": "USD mn",
+                "detail": f"{int(r['n_foundations']):,} foundations"
+            }
+            for _, r in donor_country_df.head(5).iterrows()
+        ],
+        "secondary_table_title": "Top SDG focus areas",
+        "secondary_table": [
+            {"label": k, "value": safe_round(v, 2), "unit": "USD mn", "detail": "tagged disbursement"}
+            for k, v in sdg_top.items()
+        ],
+    },
+    "recipients": {
+        "title": "Recipient-country totals show where funding lands, but sectors explain why.",
+        "stats": [
+            {"label": "Recipient countries", "value": int(df["country"].nunique()), "unit": "countries"},
+            {"label": "OECD sectors", "value": int(df["sector_description"].nunique()), "unit": "sectors"},
+            {"label": "Top recipient", "value": str(recipient_df.iloc[0]["country"]), "unit": ""},
+        ],
+        "bullets": [
+            "Recipient rankings show geographic concentration of funding.",
+            "Sector rankings explain whether the money supports health, emergency response, education, environment, or governance.",
+            "Countries with high totals may reflect crisis response rather than long-term development investment."
+        ],
+        "table_title": "Top recipient countries",
+        "table": [
+            {
+                "label": r["country"],
+                "value": safe_round(r["disbursement"], 2),
+                "unit": "USD mn",
+                "detail": f"{int(r['n_grants']):,} grants · {int(r['n_donors']):,} donors"
+            }
+            for _, r in recipient_df.head(5).iterrows()
+        ],
+        "secondary_table_title": "Top OECD sectors",
+        "secondary_table": [
+            {
+                "label": r["sector_description"],
+                "value": safe_round(r["disbursement"], 2),
+                "unit": "USD mn",
+                "detail": f"{int(r['n_grants']):,} grants"
+            }
+            for _, r in sector_df.head(5).iterrows()
+        ],
+    },
+    "cross_border": {
+        "title": "Cross-border funding highlights international philanthropy rather than domestic giving.",
+        "stats": [
+            {"label": "Cross-border share", "value": safe_round((len(cross_df) / len(df)) * 100, 1), "unit": "% of grants"},
+            {"label": "Cross-border disbursement", "value": safe_round(cross_df["disb"].sum(), 2), "unit": "USD mn"},
+            {"label": "Top cross-border region", "value": str(cross_recipient_df.iloc[0]["region_macro"]), "unit": ""},
+        ],
+        "bullets": [
+            "Cross-border grants are useful for understanding aid flows that leave the donor country.",
+            "Unspecified or regional recipients should be interpreted carefully because they may represent global or multi-country funding.",
+            "Top cross-border foundations reveal which funders are most internationally oriented."
+        ],
+        "table_title": "Top cross-border recipients",
+        "table": [
+            {
+                "label": r["country"],
+                "value": safe_round(r["disbursement"], 2),
+                "unit": "USD mn",
+                "detail": f"{int(r['n_grants']):,} grants"
+            }
+            for _, r in cross_recipient_df.head(3).iterrows()
+        ],
+        "secondary_table_title": "Top cross-border sectors",
+        "secondary_table": [
+            {
+                "label": r["sector_description"],
+                "value": safe_round(r["disbursement"], 2),
+                "unit": "USD mn",
+                "detail": f"{int(r['n_grants']):,} grants"
+            }
+            for _, r in cross_sector_df.head(3).iterrows()
+        ],
+        "tertiary_table_title": "Most cross-border-oriented foundations",
+        "tertiary_table": [
+            {
+                "label": r["organization_name"],
+                "value": safe_round(r["disbursement"], 2),
+                "unit": "USD mn",
+                "detail": f"{int(r['n_grants']):,} grants"
+            }
+            for _, r in cross_donor_df.head(3).iterrows()
+        ],
+    },
+}
+
+write_json("kpi-highlights.json", kpi_highlights)
 
 print("\nDone.")

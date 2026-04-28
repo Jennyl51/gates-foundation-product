@@ -4,17 +4,20 @@ import { Card, Pill } from "@/components/card";
 import { Scaffold, KPI } from "@/components/scaffold";
 import { TrustBadge, TrustLegend } from "@/components/trust-badge";
 import { Term } from "@/components/glossary";
+import { KpiSelector } from "@/components/kpi-selector";
 import {
   loadSummary,
   loadMisalignment,
   loadSimpsonsFlags,
   loadConcentration,
+  loadKpiHighlights,
 } from "@/lib/data";
 import { formatNumber, formatUSD } from "@/lib/format";
 
 export default async function HomePage() {
-  const [summary, m, simpsons, conc] = await Promise.all([
+  const [summary, kpiHighlights, m, simpsons, conc] = await Promise.all([
     loadSummary(),
+    loadKpiHighlights(),
     loadMisalignment(),
     loadSimpsonsFlags(),
     loadConcentration(),
@@ -55,7 +58,7 @@ export default async function HomePage() {
             {formatNumber(summary.n_recipient_countries)} countries.
           </p>
 
-          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          {/* <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <KPI label="Disbursed" value={formatUSD(summary.total_disbursement_usd_mn)}
                  sub={`${formatNumber(summary.rows)} grants`} accent trustTier="B" />
             <KPI label="Foundations" value={formatNumber(summary.n_foundations)}
@@ -66,11 +69,48 @@ export default async function HomePage() {
                  sub="of grants leave the donor's country" trustTier="B" />
           </div>
 
+          <div className="mt-6"><TrustLegend /></div> */}
+
+<KpiSelector
+  highlights={kpiHighlights}
+  items={[
+    {
+      id: "disbursed",
+      label: "Disbursed",
+      value: formatUSD(summary.total_disbursement_usd_mn),
+      sub: `${formatNumber(summary.rows)} grants`,
+      accent: true,
+      trustTier: "B",
+    },
+    {
+      id: "foundations",
+      label: "Foundations",
+      value: formatNumber(summary.n_foundations),
+      sub: `${formatNumber(summary.n_donor_countries)} home countries`,
+      trustTier: "B",
+    },
+    {
+      id: "recipients",
+      label: "Recipient countries",
+      value: formatNumber(summary.n_recipient_countries),
+      sub: `${formatNumber(summary.n_sectors)} OECD sectors`,
+      trustTier: "B",
+    },
+    {
+      id: "cross_border",
+      label: "Cross-border",
+      value: `${summary.share_cross_border}%`,
+      sub: "of grants leave the donor's country",
+      trustTier: "B",
+    },
+  ]}
+/>
+
           <div className="mt-6"><TrustLegend /></div>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/diagnose/sdg"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--primary-deep)] text-white text-[15px] font-medium hover:bg-[var(--primary)] transition-colors shadow-sm">
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--primary-soft)] text-white text-[15px] font-medium hover:bg-[var(--primary)] hover:text-white/70 transition-colors shadow-sm">
               See the goal alignment diagnosis →
             </Link>
             <Link href="/country"
