@@ -2,8 +2,8 @@
 
 A reading of the OECD philanthropy database.
 
-# gates-foundation-product
-SP26 DSS x Datagood x OP Case Competition Product Track - [Ayah Elzein, Maxime Chung, Jenny Liang]
+SP26 DSS x Datagood x OP Case Competition 
+Product Track - [Ayah Elzein, Maxime Chung, Jenny Liang]
 
 ### Basic Git Commands & Set up ###
 **Set Up**
