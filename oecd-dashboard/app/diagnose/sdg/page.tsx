@@ -5,6 +5,7 @@ import { Card, Pill } from "@/components/card";
 import { TrustBadge, TrustLegend } from "@/components/trust-badge";
 import { Term } from "@/components/glossary";
 import { SdgMisalignmentSection } from "@/components/sdg-misalignment-section";
+import { SdgBriefing } from "@/components/sdg-briefing";
 import { loadMisalignment } from "@/lib/data";
 import { formatUSD } from "@/lib/format";
 
@@ -50,6 +51,11 @@ export default async function SDGDiagnosePage() {
           </p>
           <div className="mt-6"><TrustLegend /></div>
         </div>
+      </section>
+
+      {/* TL;DR briefing — what an analyst would lead an HLPF input with. */}
+      <section className="mx-auto max-w-[1240px] px-6 lg:px-10 mt-10">
+        <SdgBriefing m={m} />
       </section>
 
       {/* Lens 1. World-level Misalignment */}
